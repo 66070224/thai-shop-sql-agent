@@ -22,7 +22,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Protocol
 
-from thai_shop_agent.config import EMBED_MODEL, EXAMPLES, INDEX_PATH, SCHEMA_DOCS, TABLES
+from thai_shop_agent.config import DEFAULT_RETRIEVAL, EMBED_MODEL, EXAMPLES, INDEX_PATH, SCHEMA_DOCS, TABLES
 
 SCHEMA_KINDS = ("table", "rule")  # what search_schema ranks; relationships is always included
 INDEX_VERSION = 2  # bump when chunking or chunk metadata changes, so an old index is rebuilt
@@ -161,9 +161,9 @@ class Retriever:
                       kind: str | Sequence[str] | None = None) -> list[Hit]:
         return [h for h in self.rank(vector, kind) if h.score >= min_score][:k]
 
-    def search(self, query: str, k: int, min_score: float, kind: str | Sequence[str] | None = None) -> list[Hit]:
-        """Top-k chunks with cosine score >= min_score. k and min_score have no defaults until they are
-        chosen from measurements (eval/sweep.py)."""
+    def search(self, query: str, k: int = DEFAULT_RETRIEVAL.k_schema, min_score: float = DEFAULT_RETRIEVAL.min_score,
+               kind: str | Sequence[str] | None = None) -> list[Hit]:
+        """Top-k chunks with cosine score >= min_score (defaults from the sweep, see config.DEFAULT_RETRIEVAL)."""
         return self.search_vector(self.embed_query(query), k, min_score, kind)
 
 

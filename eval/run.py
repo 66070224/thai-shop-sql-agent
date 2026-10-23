@@ -4,14 +4,13 @@ Every predicted SQL goes through sql_guard.prepare (clean -> guard -> LIMIT 100)
 executed, for every config including b0; a guard rejection counts as invalid SQL. ``pred_sql``
 is the model's query, ``exec_sql`` what was actually run.
 
-    uv run --env-file .env eval/run.py --config b0
-    uv run --env-file .env eval/run.py --config b1 --k-schema 3 --min-score 0.0
-    uv run --env-file .env eval/run.py --config b2 --k-schema 3 --k-examples 3 --min-score 0.0
-    uv run --env-file .env eval/run.py --config full --k-schema 3 --k-examples 3 --min-score 0.0
+    uv run --env-file .env eval/run.py --config b0      # b1 | b2 | full
+    uv run --env-file .env eval/run.py --config b2 --k-schema 3 --k-examples 3 --min-score 0.0   # override
 
 Adding a config (b1, b2, full) = adding a factory to CONFIGS that takes (conn, retrieval params)
 and returns an object with ``predict(question) -> Prediction``; the scoring and reporting below
-stay the same. Retrieval params are required for b1/b2 until eval/sweep.py sets defaults.
+stay the same. Retrieval params default to config.DEFAULT_RETRIEVAL (chosen by eval/sweep.py);
+b1 always uses k_examples = 0.
 """
 
 import argparse
@@ -28,10 +27,10 @@ from typing import Protocol
 
 from thai_shop_agent.agent import Agent
 from thai_shop_agent.baseline import Prediction, RetrievalBaseline, ZeroShotBaseline
-from thai_shop_agent.config import MODEL, QUERY_TIMEOUT_S, TEMPERATURE, RetrievalParams
+from thai_shop_agent.config import DEFAULT_RETRIEVAL, MODEL, QUERY_TIMEOUT_S, TEMPERATURE, RetrievalParams
 from thai_shop_agent.db import DB_PATH, connect_ro, run_query
 from thai_shop_agent.eval_metrics import ex_match, ex_strict
-from thai_shop_agent.llm import LLM, Embedder
+from thai_shop_agent.llm import LLM, Embedder, redact, wait_seconds
 from thai_shop_agent.retrieval import Retriever
 from thai_shop_agent.sql_guard import GuardError, prepare
 
@@ -83,14 +82,20 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
     rec = {"id": item["id"], "lang": item["lang"], "difficulty": item["difficulty"], "question": item["question"],
            "pred_sql": None, "exec_sql": None, "ok": False, "error": None, "ex": False, "ex_strict": False, "latency_s": None,
            "prompt_tokens": None, "completion_tokens": None, "llm_calls": 0, "raw_output": None,
-           "context_ids": None, "steps": None, "stopped_reason": None}
-    t0 = time.perf_counter()
+           "context_ids": None, "steps": None, "stopped_reason": None, "retry_wait_s": 0.0}
+    t0, w0 = time.perf_counter(), wait_seconds()
+
+    def finish() -> dict:
+        # latency excludes time slept on proxy rate limits / retries, which is recorded separately
+        rec["retry_wait_s"] = round(wait_seconds() - w0, 3)
+        rec["latency_s"] = round(time.perf_counter() - t0 - rec["retry_wait_s"], 3)
+        return rec
+
     try:
         pred = predictor.predict(item["question"])
     except Exception as e:  # noqa: BLE001 - an API failure is recorded, not fatal for the run
-        rec["error"] = f"llm_error: {type(e).__name__}: {e}"
-        rec["latency_s"] = round(time.perf_counter() - t0, 3)
-        return rec
+        rec["error"] = redact(f"llm_error: {type(e).__name__}: {e}")
+        return finish()
     rec.update(pred_sql=pred.sql, raw_output=pred.raw_output, prompt_tokens=pred.prompt_tokens,
                completion_tokens=pred.completion_tokens, llm_calls=pred.llm_calls,
                context_ids=pred.context_ids or None, steps=pred.steps, stopped_reason=pred.stopped_reason)
@@ -98,8 +103,7 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
         rec["exec_sql"] = prepare(pred.sql)
     except GuardError as e:
         rec["error"] = f"guard: {e}"
-        rec["latency_s"] = round(time.perf_counter() - t0, 3)
-        return rec
+        return finish()
     try:
         pred_cols, pred_rows = run_query(conn, rec["exec_sql"], timeout_s)
     except Exception as e:  # noqa: BLE001 - any SQL failure makes the prediction invalid
@@ -108,8 +112,7 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
         rec["ok"] = True
         args = (gold_rows, pred_rows, len(gold_cols), len(pred_cols), item["order_matters"])
         rec["ex"], rec["ex_strict"] = ex_match(*args), ex_strict(*args)
-    rec["latency_s"] = round(time.perf_counter() - t0, 3)
-    return rec
+    return finish()
 
 
 def _scores(records: list[dict]) -> dict:
@@ -150,15 +153,14 @@ def print_table(summary: dict) -> None:
 def retrieval_params(ap: argparse.ArgumentParser, args: argparse.Namespace) -> RetrievalParams | None:
     if args.config not in RETRIEVAL_CONFIGS:
         return None
-    k_examples = 0 if args.config == "b1" else args.k_examples
-    missing = [name for name, v in (("--k-schema", args.k_schema), ("--min-score", args.min_score),
-                                    ("--k-examples", k_examples)) if v is None]
-    if missing:
-        ap.error(f"--config {args.config} needs {' '.join(missing)} (no defaults until eval/sweep.py picks them)")
+    d = DEFAULT_RETRIEVAL
+    k_schema = d.k_schema if args.k_schema is None else args.k_schema
+    min_score = d.min_score if args.min_score is None else args.min_score
+    k_examples = 0 if args.config == "b1" else (d.k_examples if args.k_examples is None else args.k_examples)
     if args.config == "b2" and k_examples < 1:
         ap.error("--config b2 needs --k-examples >= 1 (k_examples = 0 is b1)")
     # full starts from the B2 context; --k-examples 0 is allowed there (the sweep may pick it)
-    return RetrievalParams(k_schema=args.k_schema, k_examples=k_examples, min_score=args.min_score,
+    return RetrievalParams(k_schema=k_schema, k_examples=k_examples, min_score=min_score,
                            rule_tables=not args.no_rule_tables)
 
 

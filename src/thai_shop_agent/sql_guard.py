@@ -28,6 +28,7 @@ DENYLIST = frozenset({
 DEFAULT_LIMIT = 100
 DIALECT = "sqlite"
 
+_ANSI = re.compile(r"\x1b\[[0-9;]*m")  # sqlglot underlines the error position with terminal codes
 _FENCE = re.compile(r"```[ \t]*(?:sqlite|sql)?[ \t]*\n?(.*?)```", re.IGNORECASE | re.DOTALL)
 
 # sqlglot logs a warning when it falls back to parsing a statement as a generic Command;
@@ -83,7 +84,7 @@ def _check_tree(sql: str) -> exp.Expression:
     try:
         trees = [t for t in sqlglot.parse(sql, read=DIALECT) if t is not None]
     except SqlglotError as e:
-        raise GuardError(f"SQL syntax error: {e}") from e
+        raise GuardError(f"SQL syntax error: {_ANSI.sub('', str(e))}") from e
     if len(trees) != 1:
         raise GuardError("only one SQL statement is allowed")
     tree = trees[0]

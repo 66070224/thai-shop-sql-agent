@@ -1,0 +1,62 @@
+{
+  "config": "full",
+  "timestamp": "20261023-115729",
+  "model": "gemma-4-E4B-it",
+  "temperature": 0.0,
+  "results_file": "full_20261023-115729.jsonl",
+  "testset_sha256": "c5d3c50de41b09412607cac70eeaecd8e8e716c36570bc42f4629e796afcf6ff",
+  "db_sha256": "a26dda0681ba8f35c20a8a69b3252f76f526edca24d9595190890dc7ab4a2a92",
+  "subset_ids": null,
+  "retrieval_params": {
+    "k_schema": 5,
+    "k_examples": 1,
+    "min_score": 0.35,
+    "rule_tables": true
+  },
+  "overall": {
+    "n": 30,
+    "ex": 0.8333,
+    "ex_strict": 0.7,
+    "valid_sql_rate": 0.9667,
+    "avg_latency_s": 8.473
+  },
+  "by_difficulty": {
+    "easy": {
+      "n": 10,
+      "ex": 1.0,
+      "ex_strict": 0.9,
+      "valid_sql_rate": 1.0,
+      "avg_latency_s": 1.117
+    },
+    "medium": {
+      "n": 12,
+      "ex": 0.9167,
+      "ex_strict": 0.75,
+      "valid_sql_rate": 1.0,
+      "avg_latency_s": 2.062
+    },
+    "hard": {
+      "n": 8,
+      "ex": 0.5,
+      "ex_strict": 0.375,
+      "valid_sql_rate": 0.875,
+      "avg_latency_s": 27.285
+    }
+  },
+  "by_lang": {
+    "th": {
+      "n": 15,
+      "ex": 0.8667,
+      "ex_strict": 0.6667,
+      "valid_sql_rate": 0.9333,
+      "avg_latency_s": 9.985
+    },
+    "en": {
+      "n": 15,
+      "ex": 0.8,
+      "ex_strict": 0.7333,
+      "valid_sql_rate": 1.0,
+      "avg_latency_s": 6.961
+    }
+  }
+}

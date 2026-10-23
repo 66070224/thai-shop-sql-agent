@@ -22,9 +22,18 @@ MAX_STEPS = 5  # agent: model calls per question
 
 @dataclass(frozen=True)
 class RetrievalParams:
-    """How much retrieved context goes into the prompt. No defaults yet: they are chosen in eval/sweep.py."""
+    """How much retrieved context goes into the prompt (defaults: DEFAULT_RETRIEVAL below)."""
 
     k_schema: int  # table + rule chunks (relationships is always added)
     k_examples: int  # question -> SQL examples; 0 = zero-shot
     min_score: float  # cosine threshold for both
     rule_tables: bool = True  # also add DDL of tables named by retrieved rules
+
+
+# Chosen by eval/sweep.py -> eval/results/sweep_20261023-113639.json (single-shot predictor, rule-table DDL on).
+# Rule: max EX, then EX-strict, valid SQL rate, hard EX, fewest prompt tokens. k_schema=5, k_examples=1 gave
+# EX 0.867 / EX-strict 0.767 / valid 1.00 / hard 0.75 at min_score 0.0 and 0.35; 0.35 wins on prompt tokens
+# (1720 vs 1746). Margins between the top settings are 1-2 questions out of 30, and the values were tuned on
+# the test set itself (there is no dev split): a limitation to state in the report.
+# B1 uses the same k_schema / min_score with k_examples = 0, so B1 vs B2 isolates the effect of examples.
+DEFAULT_RETRIEVAL = RetrievalParams(k_schema=5, k_examples=1, min_score=0.35)

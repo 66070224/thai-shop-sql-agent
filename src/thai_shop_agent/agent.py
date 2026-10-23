@@ -21,7 +21,7 @@ from typing import Any
 
 from thai_shop_agent.config import MAX_STEPS, RetrievalParams
 from thai_shop_agent.db import table_ddl
-from thai_shop_agent.llm import LLM
+from thai_shop_agent.llm import LLM, redact
 from thai_shop_agent.retrieval import Retriever, build_prompt_context
 from thai_shop_agent.schemas import Citations, FinalAnswer, StopReason, Usage
 from thai_shop_agent.sql_guard import clean, referenced_tables
@@ -78,7 +78,7 @@ class Agent:
         try:
             yield from self._run(question)
         except Exception as e:  # noqa: BLE001 - surfaced as an event so a stream can end cleanly
-            yield {"type": "error", "message": f"{type(e).__name__}: {e}"}
+            yield {"type": "error", "message": redact(f"{type(e).__name__}: {e}")}
 
     def _run(self, question: str) -> Iterator[dict[str, Any]]:
         p = self.params
