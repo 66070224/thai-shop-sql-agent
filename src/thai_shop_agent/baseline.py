@@ -30,6 +30,8 @@ class Prediction:
     completion_tokens: int | None = None
     llm_calls: int = 1
     context_ids: list[str] = field(default_factory=list)  # retrieved chunk ids placed in the prompt
+    steps: int | None = None  # agent only: tool calls executed
+    stopped_reason: str | None = None  # agent only
 
 
 def build_b0_messages(ddl: str, docs: str, question: str) -> list[dict]:

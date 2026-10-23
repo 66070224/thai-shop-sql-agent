@@ -7,6 +7,7 @@ is the model's query, ``exec_sql`` what was actually run.
     uv run --env-file .env eval/run.py --config b0
     uv run --env-file .env eval/run.py --config b1 --k-schema 3 --min-score 0.0
     uv run --env-file .env eval/run.py --config b2 --k-schema 3 --k-examples 3 --min-score 0.0
+    uv run --env-file .env eval/run.py --config full --k-schema 3 --k-examples 3 --min-score 0.0
 
 Adding a config (b1, b2, full) = adding a factory to CONFIGS that takes (conn, retrieval params)
 and returns an object with ``predict(question) -> Prediction``; the scoring and reporting below
@@ -25,6 +26,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Protocol
 
+from thai_shop_agent.agent import Agent
 from thai_shop_agent.baseline import Prediction, RetrievalBaseline, ZeroShotBaseline
 from thai_shop_agent.config import MODEL, QUERY_TIMEOUT_S, TEMPERATURE, RetrievalParams
 from thai_shop_agent.db import DB_PATH, connect_ro, run_query
@@ -42,12 +44,32 @@ class Predictor(Protocol):
     def predict(self, question: str) -> Prediction: ...
 
 
+class AgentPredictor:
+    """Runs the agent and reads its last event; pred SQL = FinalAnswer.sql ("" when none ran -> invalid)."""
+
+    def __init__(self, agent: Agent):
+        self.agent = agent
+
+    def predict(self, question: str) -> Prediction:
+        last = None
+        for last in self.agent.run(question):
+            pass
+        if last is None or last["type"] == "error":
+            raise RuntimeError(last["message"] if last else "agent produced no events")
+        u = last["usage"]
+        return Prediction(sql=last["sql"] or "", raw_output=last["answer"], prompt_tokens=u["prompt_tokens"],
+                          completion_tokens=u["completion_tokens"], llm_calls=u["llm_calls"],
+                          context_ids=last["citations"]["chunks"], steps=last["steps"],
+                          stopped_reason=last["stopped_reason"])
+
+
 CONFIGS: dict[str, Callable[[sqlite3.Connection, RetrievalParams | None], Predictor]] = {
     "b0": lambda conn, params: ZeroShotBaseline(LLM(), conn),
     "b1": lambda conn, params: RetrievalBaseline(LLM(), conn, Retriever(Embedder()), params),
     "b2": lambda conn, params: RetrievalBaseline(LLM(), conn, Retriever(Embedder()), params),
+    "full": lambda conn, params: AgentPredictor(Agent(LLM(), Retriever(Embedder()), conn, params)),
 }
-RETRIEVAL_CONFIGS = {"b1", "b2"}
+RETRIEVAL_CONFIGS = {"b1", "b2", "full"}
 
 
 def load_testset(path: Path = TESTSET) -> list[dict]:
@@ -61,7 +83,7 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
     rec = {"id": item["id"], "lang": item["lang"], "difficulty": item["difficulty"], "question": item["question"],
            "pred_sql": None, "exec_sql": None, "ok": False, "error": None, "ex": False, "ex_strict": False, "latency_s": None,
            "prompt_tokens": None, "completion_tokens": None, "llm_calls": 0, "raw_output": None,
-           "context_ids": None}
+           "context_ids": None, "steps": None, "stopped_reason": None}
     t0 = time.perf_counter()
     try:
         pred = predictor.predict(item["question"])
@@ -71,7 +93,7 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
         return rec
     rec.update(pred_sql=pred.sql, raw_output=pred.raw_output, prompt_tokens=pred.prompt_tokens,
                completion_tokens=pred.completion_tokens, llm_calls=pred.llm_calls,
-               context_ids=pred.context_ids or None)
+               context_ids=pred.context_ids or None, steps=pred.steps, stopped_reason=pred.stopped_reason)
     try:
         rec["exec_sql"] = prepare(pred.sql)
     except GuardError as e:
@@ -135,6 +157,7 @@ def retrieval_params(ap: argparse.ArgumentParser, args: argparse.Namespace) -> R
         ap.error(f"--config {args.config} needs {' '.join(missing)} (no defaults until eval/sweep.py picks them)")
     if args.config == "b2" and k_examples < 1:
         ap.error("--config b2 needs --k-examples >= 1 (k_examples = 0 is b1)")
+    # full starts from the B2 context; --k-examples 0 is allowed there (the sweep may pick it)
     return RetrievalParams(k_schema=args.k_schema, k_examples=k_examples, min_score=args.min_score,
                            rule_tables=not args.no_rule_tables)
 
@@ -146,7 +169,7 @@ def main() -> int:
     ap.add_argument("--ids", nargs="*", help="only run these question ids (smoke test)")
     ap.add_argument("--timeout", type=float, default=QUERY_TIMEOUT_S, help="per-query timeout in seconds")
     ap.add_argument("--k-schema", type=int, help="table/rule chunks to retrieve (b1, b2)")
-    ap.add_argument("--k-examples", type=int, help="examples to retrieve (b2; b1 is always 0)")
+    ap.add_argument("--k-examples", type=int, help="examples to retrieve (b2, full; b1 is always 0)")
     ap.add_argument("--min-score", type=float, help="cosine threshold for retrieval (b1, b2)")
     ap.add_argument("--no-rule-tables", action="store_true", help="only DDL of retrieved table chunks")
     args = ap.parse_args()

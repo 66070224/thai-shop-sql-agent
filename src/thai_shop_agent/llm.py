@@ -14,6 +14,26 @@ class Completion:
     completion_tokens: int | None
 
 
+@dataclass
+class ToolCall:
+    id: str
+    name: str
+    arguments: str  # raw JSON text as the model wrote it; parsed and validated by tools.py
+
+
+@dataclass
+class ToolCompletion(Completion):
+    tool_calls: list[ToolCall]
+
+    def assistant_message(self) -> dict:
+        """The assistant turn to append to the history before the tool results."""
+        msg: dict = {"role": "assistant", "content": self.text or None}
+        if self.tool_calls:
+            msg["tool_calls"] = [{"id": c.id, "type": "function", "function": {"name": c.name, "arguments": c.arguments}}
+                                 for c in self.tool_calls]
+        return msg
+
+
 class LLM:
     def __init__(self, model: str = MODEL, temperature: float = TEMPERATURE, max_tokens: int = MAX_TOKENS):
         self.client = OpenAI()  # reads OPENAI_API_KEY and OPENAI_BASE_URL from the environment
@@ -30,6 +50,22 @@ class LLM:
             text=resp.choices[0].message.content or "",
             prompt_tokens=usage.prompt_tokens if usage else None,
             completion_tokens=usage.completion_tokens if usage else None,
+        )
+
+    def chat_tools(self, messages: list[dict], tools: list[dict]) -> ToolCompletion:
+        """One call with native ``tools=``; the model may answer with text, tool calls, or both."""
+        resp = self.client.chat.completions.create(
+            model=self.model, messages=messages, tools=tools, temperature=self.temperature,
+            max_tokens=self.max_tokens,
+        )
+        msg, usage = resp.choices[0].message, resp.usage
+        calls = [ToolCall(id=c.id or f"call_{i}", name=c.function.name, arguments=c.function.arguments or "")
+                 for i, c in enumerate(msg.tool_calls or [])]
+        return ToolCompletion(
+            text=msg.content or "",
+            prompt_tokens=usage.prompt_tokens if usage else None,
+            completion_tokens=usage.completion_tokens if usage else None,
+            tool_calls=calls,
         )
 
 

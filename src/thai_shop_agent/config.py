@@ -17,6 +17,7 @@ EMBED_BATCH = 32
 TEMPERATURE = 0.0
 MAX_TOKENS = 1024
 QUERY_TIMEOUT_S = 10.0
+MAX_STEPS = 5  # agent: model calls per question
 
 
 @dataclass(frozen=True)
