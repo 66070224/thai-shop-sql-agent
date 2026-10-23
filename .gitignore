@@ -13,3 +13,4 @@ CLAUDE.md
 # Secrets and generated data
 .env
 data/*.db
+data/csv/
