@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thai Shop SQL Agent</title>
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --panel: #ffffff;
+    --ink: #1d1d1b;
+    --muted: #6b6a66;
+    --line: #e3e1db;
+    --accent: #0f6e5c;
+    --accent-ink: #ffffff;
+    --code-bg: #f1efe9;
+    --ok: #1f7a3f;
+    --err: #b3261e;
+    --chip: #ecebe6;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151614;
+      --panel: #1e201d;
+      --ink: #ecebe6;
+      --muted: #a09f99;
+      --line: #33352f;
+      --accent: #4fc2a5;
+      --accent-ink: #0d1a16;
+      --code-bg: #262824;
+      --ok: #6fcf8f;
+      --err: #ff8a80;
+      --chip: #2b2d28;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.6 "Segoe UI", "Leelawadee UI", "Noto Sans Thai", Tahoma, system-ui, sans-serif;
+  }
+  main { max-width: 920px; margin: 0 auto; padding: 28px 16px 64px; }
+  header h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -.01em; }
+  header p { margin: 0 0 20px; color: var(--muted); }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  form textarea {
+    width: 100%;
+    min-height: 64px;
+    resize: vertical;
+    padding: 10px 12px;
+    font: inherit;
+    color: inherit;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .row .spacer { flex: 1; }
+  button {
+    font: inherit;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    padding: 7px 14px;
+    cursor: pointer;
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  button:disabled { opacity: .55; cursor: default; }
+  .examples button { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; }
+  .counter { color: var(--muted); font-size: 12px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 26px 0 8px; }
+  #status { color: var(--muted); font-size: 13px; min-height: 1.6em; margin-top: 10px; }
+  ol.steps { list-style: none; margin: 0; padding: 0; }
+  ol.steps li { border-left: 2px solid var(--line); padding: 2px 0 12px 14px; position: relative; }
+  ol.steps li::before {
+    content: ""; position: absolute; left: -6px; top: 8px; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--panel); border: 2px solid var(--muted);
+  }
+  ol.steps li.ok::before { border-color: var(--ok); }
+  ol.steps li.err::before { border-color: var(--err); }
+  .step-title { font-weight: 600; }
+  .step-title .tag { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .chip { background: var(--chip); border-radius: 999px; padding: 1px 9px; font-size: 12.5px; }
+  .chip small { color: var(--muted); margin-left: 4px; }
+  pre {
+    margin: 6px 0 0;
+    padding: 10px 12px;
+    background: var(--code-bg);
+    border-radius: 8px;
+    overflow-x: auto;
+    font: 13px/1.5 Consolas, "Cascadia Mono", "SFMono-Regular", monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .error-text { color: var(--err); }
+  .ok-text { color: var(--ok); }
+  .answer { font-size: 17px; white-space: pre-wrap; }
+  .meta { color: var(--muted); font-size: 13px; margin-top: 10px; }
+  .table-wrap { overflow-x: auto; margin-top: 6px; border: 1px solid var(--line); border-radius: 8px; max-height: 420px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { padding: 6px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  th { position: sticky; top: 0; background: var(--panel); font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: 0; }
+  .sql-head { display: flex; align-items: baseline; gap: 10px; margin: 26px 0 8px; }
+  .sql-head h2 { margin: 0; }
+  .sql-head button { font-size: 12px; padding: 2px 10px; }
+  .hidden { display: none; }
+  @media (max-width: 560px) {
+    main { padding: 18px 16px 48px; }
+    .answer { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Thai Shop SQL Agent</h1>
+    <p>ถามเป็นภาษาไทยหรืออังกฤษเกี่ยวกับข้อมูลร้านค้า (ม.ค. 2024 – ธ.ค. 2025) แล้วดูขั้นตอน, SQL, ผลลัพธ์ และแหล่งอ้างอิง</p>
+  </header>
+
+  <section class="panel">
+    <form id="ask-form">
+      <label for="question" class="hidden">คำถาม</label>
+      <textarea id="question" maxlength="500" placeholder="เช่น ยอดขายรวมของปี 2025 เท่าไหร่" required></textarea>
+      <div class="row examples" id="examples"></div>
+      <div class="row">
+        <span class="counter" id="counter">0 / 500</span>
+        <span class="spacer"></span>
+        <button type="button" id="stop" disabled>หยุด</button>
+        <button type="submit" class="primary" id="send">ถาม</button>
+      </div>
+    </form>
+    <div id="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <section id="answer-section" class="hidden">
+    <h2>คำตอบ</h2>
+    <div class="panel">
+      <div class="answer" id="answer"></div>
+      <div class="meta" id="meta"></div>
+    </div>
+  </section>
+
+  <section id="sql-section" class="hidden">
+    <div class="sql-head"><h2>SQL ที่ใช้</h2><button type="button" id="copy-sql">คัดลอก</button></div>
+    <pre id="sql"></pre>
+  </section>
+
+  <section id="result-section" class="hidden">
+    <h2 id="result-title">ผลลัพธ์</h2>
+    <div class="table-wrap" id="result"></div>
+  </section>
+
+  <section id="citations-section" class="hidden">
+    <h2>แหล่งอ้างอิง</h2>
+    <div class="panel" id="citations"></div>
+  </section>
+
+  <section id="steps-section" class="hidden">
+    <h2>ขั้นตอนของ agent</h2>
+    <ol class="steps" id="steps"></ol>
+  </section>
+</main>
+
+<script>
+"use strict";
+
+const EXAMPLES = [
+  "ยอดขายรวมเดือนมีนาคม 2025 เท่าไหร่",
+  "How many unique customers live in Chiang Mai?",
+  "หมวดสินค้าไหนขายดีที่สุดในปี 2024",
+  "Which payment method has the most failed attempts?",
+];
+
+const $ = (id) => document.getElementById(id);
+const form = $("ask-form"), questionEl = $("question"), sendBtn = $("send"), stopBtn = $("stop");
+let controller = null;
+let startedAt = 0;
+
+// Build DOM with textContent only: everything from the server (model text, rows) is untrusted.
+function el(tag, attrs = {}, ...children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v; else node.setAttribute(k, v);
+  }
+  for (const c of children) {
+    if (c == null) continue;
+    node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  }
+  return node;
+}
+
+function show(id, visible = true) { $(id).classList.toggle("hidden", !visible); }
+
+function formatCell(v) {
+  if (v === null || v === undefined) return "NULL";
+  if (typeof v === "number") {
+    return Number.isInteger(v) ? v.toLocaleString("en-US") : v.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  }
+  return String(v);
+}
+
+function renderTable(columns, rows) {
+  const head = el("tr", {}, ...columns.map((c) => el("th", {}, c)));
+  const body = rows.map((r) => el("tr", {}, ...r.map((v) => el("td", typeof v === "number" ? { class: "num" } : {}, formatCell(v)))));
+  return el("table", {}, el("thead", {}, head), el("tbody", {}, ...body));
+}
+
+function prettyArgs(raw) {
+  try {
+    const args = JSON.parse(raw);
+    if (args && typeof args.sql === "string") return { sql: args.sql };
+    return { text: JSON.stringify(args, null, 2) };
+  } catch { return { text: raw }; }
+}
+
+const stepItems = new Map();  // tool call id -> <li>
+
+function addStep(cls, title, tag, ...body) {
+  const li = el("li", { class: cls }, el("div", { class: "step-title" }, title, tag ? el("span", { class: "tag" }, tag) : null), ...body);
+  $("steps").append(li);
+  show("steps-section");
+  return li;
+}
+
+function onRetrieval(ev) {
+  const chips = el("div", { class: "chips" },
+    ...ev.chunks.map((c) => el("span", { class: "chip" }, c.id, c.score == null ? null : el("small", {}, c.score.toFixed(2)))));
+  const tables = ev.tables.length ? `DDL: ${ev.tables.join(", ")}` : "";
+  addStep("ok", "ดึง schema และตัวอย่างที่เกี่ยวข้อง", tables, chips);
+}
+
+function onToolCall(ev) {
+  const args = prettyArgs(ev.arguments);
+  const li = addStep("", `ขั้นที่ ${ev.step}: ${ev.name}`, "กำลังทำงาน…", el("pre", {}, args.sql ?? args.text));
+  stepItems.set(ev.id, li);
+}
+
+function onToolResult(ev) {
+  const li = stepItems.get(ev.id) || addStep("", `ขั้นที่ ${ev.step}: ${ev.name}`, "");
+  li.classList.add(ev.ok ? "ok" : "err");
+  li.querySelector(".tag").textContent = ev.ok ? "สำเร็จ" : "ไม่สำเร็จ";
+  if (!ev.ok) {
+    li.append(el("div", { class: "error-text" }, ev.error));
+  } else if (ev.name === "run_sql") {
+    li.append(el("div", { class: "ok-text" }, `${ev.row_count} แถว`));
+    if (ev.rows && ev.rows.length) li.append(el("div", { class: "table-wrap" }, renderTable(ev.columns, ev.rows.slice(0, 5))));
+  } else if (ev.chunks) {
+    li.append(el("div", { class: "chips" }, ...ev.chunks.map((c) => el("span", { class: "chip" }, c))));
+  }
+}
+
+function onAnswer(ev) {
+  $("answer").textContent = ev.answer;
+  const secs = ((performance.now() - startedAt) / 1000).toFixed(1);
+  const u = ev.usage || {};
+  $("meta").textContent = `หยุดเพราะ: ${ev.stopped_reason} · tool calls: ${ev.steps} · LLM calls: ${u.llm_calls ?? "–"} · ` +
+    `tokens: ${u.prompt_tokens ?? "–"} + ${u.completion_tokens ?? "–"} · ${secs} s`;
+  show("answer-section");
+
+  if (ev.sql) {
+    $("sql").textContent = ev.sql;
+    show("sql-section");
+    $("result").replaceChildren(renderTable(ev.columns, ev.rows));
+    $("result-title").textContent = `ผลลัพธ์ (${ev.rows.length} แถว)`;
+    show("result-section");
+  }
+
+  const cit = ev.citations || { tables: [], chunks: [] };
+  $("citations").replaceChildren(
+    el("div", {}, el("strong", {}, "ตารางที่ SQL ใช้: "), cit.tables.length ? cit.tables.join(", ") : "–"),
+    el("div", { class: "chips" }, ...cit.chunks.map((c) => el("span", { class: "chip" }, c))),
+  );
+  show("citations-section");
+}
+
+function onError(message) {
+  addStep("err", "เกิดข้อผิดพลาด", "", el("div", { class: "error-text" }, message));
+  setStatus("ไม่สำเร็จ: " + message, true);
+}
+
+function handleEvent(ev) {
+  switch (ev.type) {
+    case "retrieval": onRetrieval(ev); setStatus("กำลังให้ model เขียน SQL…"); break;
+    case "tool_call": setStatus(`กำลังเรียก ${ev.name}…`); onToolCall(ev); break;
+    case "tool_result": onToolResult(ev); setStatus("กำลังคิดต่อ…"); break;
+    case "answer": onAnswer(ev); setStatus("เสร็จแล้ว"); break;
+    case "error": onError(ev.message); break;
+  }
+}
+
+// While a request runs, the status line shows the elapsed time so a slow step (the proxy may be
+// waiting out a rate limit) still looks alive.
+let statusText = "", ticker = null;
+
+function renderStatus() {
+  const secs = controller ? ` · ${Math.round((performance.now() - startedAt) / 1000)} s` : "";
+  $("status").textContent = statusText + secs;
+}
+
+function setStatus(text, isError = false) {
+  statusText = text;
+  $("status").classList.toggle("error-text", isError);
+  renderStatus();
+}
+
+// One SSE frame = "data: {json}\n\n". A network chunk can end in the middle of a frame (or of a
+// multi-byte Thai character), so bytes are decoded in streaming mode and only complete frames
+// (ending in a blank line) are parsed; the tail waits in `buffer` for the next chunk.
+function parseFrame(frame) {
+  const data = frame.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).replace(/^ /, "")).join("\n");
+  return data ? JSON.parse(data) : null;
+}
+
+async function readStream(response) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    buffer += decoder.decode(value || new Uint8Array(), { stream: !done });
+    buffer = buffer.replace(/\r\n/g, "\n");
+    let cut;
+    while ((cut = buffer.indexOf("\n\n")) !== -1) {
+      const frame = buffer.slice(0, cut);
+      buffer = buffer.slice(cut + 2);
+      const ev = parseFrame(frame);
+      if (ev) handleEvent(ev);
+    }
+    if (done) break;
+  }
+  if (buffer.trim()) { const ev = parseFrame(buffer); if (ev) handleEvent(ev); }
+}
+
+function reset() {
+  for (const id of ["answer-section", "sql-section", "result-section", "citations-section", "steps-section"]) show(id, false);
+  $("steps").replaceChildren();
+  stepItems.clear();
+}
+
+async function ask(question) {
+  if (controller) controller.abort();
+  controller = new AbortController();
+  reset();
+  startedAt = performance.now();
+  sendBtn.disabled = true; stopBtn.disabled = false;
+  clearInterval(ticker);
+  ticker = setInterval(renderStatus, 1000);
+  setStatus("กำลังค้นหา schema ที่เกี่ยวข้อง…");
+  try {
+    const response = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      let detail = `HTTP ${response.status}`;
+      try { const body = await response.json(); if (body.detail) detail += ": " + JSON.stringify(body.detail); } catch {}
+      onError(detail);
+      return;
+    }
+    await readStream(response);
+  } catch (err) {
+    if (err.name === "AbortError") setStatus("หยุดแล้ว");
+    else onError(String(err));
+  } finally {
+    sendBtn.disabled = false; stopBtn.disabled = true;
+    controller = null;
+    clearInterval(ticker);
+    renderStatus();
+  }
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const q = questionEl.value.trim();
+  if (q) ask(q);
+});
+questionEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
+});
+questionEl.addEventListener("input", () => { $("counter").textContent = `${questionEl.value.length} / 500`; });
+stopBtn.addEventListener("click", () => controller && controller.abort());
+$("copy-sql").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText($("sql").textContent); $("copy-sql").textContent = "คัดลอกแล้ว"; }
+  catch { $("copy-sql").textContent = "คัดลอกไม่ได้"; }
+  setTimeout(() => { $("copy-sql").textContent = "คัดลอก"; }, 1500);
+});
+for (const q of EXAMPLES) {
+  $("examples").append(el("button", { type: "button" }, q));
+  $("examples").lastChild.addEventListener("click", () => { questionEl.value = q; questionEl.dispatchEvent(new Event("input")); ask(q); });
+}
+</script>
+</body>
+</html>

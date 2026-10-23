@@ -17,6 +17,7 @@ EMBED_BATCH = 32
 TEMPERATURE = 0.0
 MAX_TOKENS = 1024
 QUERY_TIMEOUT_S = 10.0
+LLM_TIMEOUT_S = 90.0  # per proxy request; a timeout is retried like a connection error
 MAX_STEPS = 5  # agent: model calls per question
 
 

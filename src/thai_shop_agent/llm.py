@@ -15,7 +15,7 @@ from typing import TypeVar
 import openai
 from openai import OpenAI
 
-from thai_shop_agent.config import EMBED_BATCH, EMBED_MODEL, MAX_TOKENS, MODEL, TEMPERATURE
+from thai_shop_agent.config import EMBED_BATCH, EMBED_MODEL, LLM_TIMEOUT_S, MAX_TOKENS, MODEL, TEMPERATURE
 
 
 MAX_ATTEMPTS = 4
@@ -88,7 +88,7 @@ class ToolCompletion(Completion):
 
 class LLM:
     def __init__(self, model: str = MODEL, temperature: float = TEMPERATURE, max_tokens: int = MAX_TOKENS):
-        self.client = OpenAI(max_retries=0)  # OPENAI_API_KEY / OPENAI_BASE_URL from the environment
+        self.client = OpenAI(max_retries=0, timeout=LLM_TIMEOUT_S)  # OPENAI_API_KEY / OPENAI_BASE_URL from the environment
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
@@ -125,7 +125,7 @@ class Embedder:
     """Batch embeddings; vectors come back in input order (matched by ``data[i].index``)."""
 
     def __init__(self, model: str = EMBED_MODEL, batch_size: int = EMBED_BATCH, client: OpenAI | None = None):
-        self.client = client or OpenAI(max_retries=0)
+        self.client = client or OpenAI(max_retries=0, timeout=LLM_TIMEOUT_S)
         self.model = model
         self.batch_size = batch_size
 
