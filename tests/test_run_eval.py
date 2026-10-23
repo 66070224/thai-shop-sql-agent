@@ -31,6 +31,8 @@ class FixedPredictor:
     ("```\nSELECT 2\n```", "SELECT 2"),
     ("  SELECT 3  ", "SELECT 3"),
     ("```sql\nSELECT 4", "SELECT 4"),
+    ("```sqlite\nSELECT 5\n```", "SELECT 5"),
+    ("```sqlite\nSELECT 6", "SELECT 6"),
 ])
 def test_strip_code_fence(raw, sql):
     assert strip_code_fence(raw) == sql

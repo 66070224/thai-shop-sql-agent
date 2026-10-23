@@ -2,7 +2,7 @@
 
 import re
 
-_FENCE = re.compile(r"```[ \t]*(?:sql|sqlite)?[ \t]*\n?(.*?)```", re.IGNORECASE | re.DOTALL)
+_FENCE = re.compile(r"```[ \t]*(?:sqlite|sql)?[ \t]*\n?(.*?)```", re.IGNORECASE | re.DOTALL)
 
 
 def strip_code_fence(text: str) -> str:
@@ -11,4 +11,4 @@ def strip_code_fence(text: str) -> str:
     if m:
         return m.group(1).strip()
     # an unterminated fence (output cut off) still starts with ```
-    return re.sub(r"^```[ \t]*(?:sql|sqlite)?", "", text.strip(), flags=re.IGNORECASE).strip()
+    return re.sub(r"^```[ \t]*(?:sqlite|sql)?", "", text.strip(), flags=re.IGNORECASE).strip()

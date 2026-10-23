@@ -95,12 +95,12 @@ def sha256(path: Path) -> str:
 
 
 def print_table(summary: dict) -> None:
-    print(f"\n{'group':<14}{'n':>4}{'EX':>8}{'EX-strict':>11}{'valid SQL':>11}{'latency s':>11}")
+    print(f"\n{'group':<20}{'n':>4}{'EX':>8}{'EX-strict':>11}{'valid SQL':>11}{'latency s':>11}")
     rows = [("overall", summary["overall"])]
     rows += [(f"{k}={v}", s) for k in ("difficulty", "lang") for v, s in summary[f"by_{k}"].items()]
     for name, s in rows:
         if s["n"]:
-            print(f"{name:<14}{s['n']:>4}{s['ex']:>8.3f}{s['ex_strict']:>11.3f}{s['valid_sql_rate']:>11.3f}"
+            print(f"{name:<20}{s['n']:>4}{s['ex']:>8.3f}{s['ex_strict']:>11.3f}{s['valid_sql_rate']:>11.3f}"
                   f"{s['avg_latency_s']:>11.2f}")
 
 
