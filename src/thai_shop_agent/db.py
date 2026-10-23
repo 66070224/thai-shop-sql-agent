@@ -12,10 +12,12 @@ class QueryTimeout(Exception):
     pass
 
 
-def connect_ro(db_path: Path = DB_PATH) -> sqlite3.Connection:
+def connect_ro(db_path: Path = DB_PATH, check_same_thread: bool = True) -> sqlite3.Connection:
+    """Read-only connection. ``check_same_thread=False`` only for a connection used by one request at a
+    time whose steps may run on different worker threads (the API's streaming generator)."""
     if not db_path.exists():
         raise FileNotFoundError(f"{db_path} not found; run scripts/generate_data.py and scripts/build_db.py")
-    return sqlite3.connect(f"file:{db_path.as_posix()}?mode=ro", uri=True)
+    return sqlite3.connect(f"file:{db_path.as_posix()}?mode=ro", uri=True, check_same_thread=check_same_thread)
 
 
 def run_query(conn: sqlite3.Connection, sql: str, timeout_s: float = 10.0) -> tuple[list[str], list[tuple]]:
