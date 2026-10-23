@@ -73,8 +73,8 @@ class RetrievalBaseline:
     def predict(self, question: str) -> Prediction:
         p = self.params
         ctx = build_prompt_context(self.retriever, question, p.k_schema, p.k_examples, p.min_score, self.ddl,
-                                   p.rule_tables)
-        out = self.llm.chat(build_retrieval_messages(ctx.text, question))
+                                   p.rule_tables, p.pinned_rules)
+        out =self.llm.chat(build_retrieval_messages(ctx.text, question))
         return Prediction(sql=strip_code_fence(out.text), raw_output=out.text,
                           prompt_tokens=out.prompt_tokens, completion_tokens=out.completion_tokens,
                           context_ids=ctx.chunk_ids)

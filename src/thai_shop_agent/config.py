@@ -29,6 +29,11 @@ class RetrievalParams:
     k_examples: int  # question -> SQL examples; 0 = zero-shot
     min_score: float  # cosine threshold for both
     rule_tables: bool = True  # also add DDL of tables named by retrieved rules
+    pinned_rules: tuple[str, ...] = ()  # rule chunk ids put in every starting prompt, outside the top-k
+
+
+# Rules used across many questions whose text is rarely close to a question's embedding (eval/before_after.py).
+PINNED_RULES = ("rule:sales-revenue-definition", "rule:province-names")
 
 
 # Chosen by eval/sweep.py -> eval/results/sweep_20261023-113639.json (single-shot predictor, rule-table DDL on).

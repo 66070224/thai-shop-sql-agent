@@ -83,8 +83,9 @@ class Agent:
     def _run(self, question: str) -> Iterator[dict[str, Any]]:
         p = self.params
         ctx = build_prompt_context(self.retriever, question, p.k_schema, p.k_examples, p.min_score, self.ddl,
-                                   p.rule_tables)
-        always = [{"id": c.id, "kind": c.kind, "score": None} for c in self.retriever.by_kind("relationships")]
+                                   p.rule_tables, p.pinned_rules)
+        always = [{"id": c.id, "kind": c.kind, "score": None}
+                  for c in self.retriever.by_kind("relationships") + ctx.schema.pinned]
         ranked = [{"id": h.chunk.id, "kind": h.chunk.kind, "score": round(h.score, 4)}
                   for h in ctx.schema.hits + ctx.examples]
         yield {"type": "retrieval", "tables": ctx.schema.tables, "chunks": always + ranked}

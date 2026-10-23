@@ -7,7 +7,8 @@ Chunks:
 The index (data/index.json) stores every chunk with its bge-m3 vector plus the sha256 of the
 sources, so a stale index is detected instead of silently used. Similarity is plain-Python cosine.
 
-Prompt context (default): the relationships chunk always; tables and rules ranked together from
+Prompt context (default): the relationships chunk always, then any pinned rules (config.PINNED_RULES via
+RetrievalParams.pinned_rules; not search_schema); tables and rules ranked together from
 the same index; DDL for the tables whose chunk was retrieved plus the tables a retrieved rule names
 (rule chunks carry those in ``tables``; chosen from eval/results/retrieval_20261023-111756.json:
 recall@3 0.742 -> 0.956). B2 and the agent add the top-k examples as question -> SQL pairs.
@@ -149,6 +150,14 @@ class Retriever:
     def by_kind(self, kind: str) -> list[Chunk]:
         return [c for c in self.chunks if c.kind == kind]
 
+    def rules(self, ids: Sequence[str]) -> list[Chunk]:
+        """Rule chunks by id, in the given order; an id that is not a rule chunk in the index is an error."""
+        rules = {c.id: c for c in self.by_kind("rule")}
+        if missing := [i for i in ids if i not in rules]:
+            raise ValueError(f"pinned rule id(s) {missing} are not rule chunks in the index; "
+                             f"known rule ids: {sorted(rules)}")
+        return [rules[i] for i in ids]
+
     def embed_query(self, query: str) -> list[float]:
         return self.embedder.embed([query])[0]
 
@@ -173,24 +182,28 @@ class SchemaContext:
     hits: list[Hit]  # retrieved table / rule chunks
     tables: list[str]  # tables whose DDL was included
     chunk_ids: list[str]  # every schema chunk placed in the prompt (for citations)
+    pinned: list[Chunk] = field(default_factory=list)  # rule chunks added whatever the ranking
 
 
 def build_schema_context(retriever: Retriever, vector: Sequence[float], k: int, min_score: float,
-                         ddl: dict[str, str], rule_tables: bool = True) -> SchemaContext:
-    """Relationships + top-k table/rule chunks + DDL of the retrieved tables (and, with
-    ``rule_tables``, of the tables the retrieved rules name)."""
-    hits = retriever.search_vector(vector, k, min_score, kind=SCHEMA_KINDS)
+                         ddl: dict[str, str], rule_tables: bool = True, pinned: Sequence[str] = ()) -> SchemaContext:
+    """Relationships + pinned rules + top-k table/rule chunks + DDL of the retrieved tables (and, with
+    ``rule_tables``, of the tables the retrieved and pinned rules name). Pinned rules are left out of
+    the ranking, so ``k`` still counts ranked chunks and nothing appears twice."""
+    pinned_chunks = retriever.rules(pinned)
+    hits = [h for h in retriever.rank(vector, SCHEMA_KINDS) if h.score >= min_score and h.chunk.id not in pinned][:k]
     tables = [h.chunk.table for h in hits if h.chunk.kind == "table"]
     if rule_tables:
         tables += [t for h in hits if h.chunk.kind == "rule" for t in h.chunk.tables]
+        tables += [t for c in pinned_chunks for t in c.tables]
     tables = list(dict.fromkeys(tables))  # dedupe, keep rank order
     relationships = retriever.by_kind("relationships")
     ddl_text = "\n\n".join(ddl[t] for t in tables if t in ddl) or "(no table retrieved)"
-    docs = "\n\n".join([c.text for c in relationships] + [h.chunk.text for h in hits])
+    docs = "\n\n".join([c.text for c in relationships + pinned_chunks] + [h.chunk.text for h in hits])
     text = (f"## Database schema (SQLite DDL of the relevant tables)\n\n{ddl_text}\n\n"
             f"## Schema documentation and business rules\n\n{docs}")
-    return SchemaContext(text=text, hits=hits, tables=tables,
-                         chunk_ids=[c.id for c in relationships] + [h.chunk.id for h in hits])
+    return SchemaContext(text=text, hits=hits, tables=tables, pinned=pinned_chunks,
+                         chunk_ids=[c.id for c in relationships + pinned_chunks] + [h.chunk.id for h in hits])
 
 
 @dataclass
@@ -210,10 +223,10 @@ def format_examples(hits: list[Hit]) -> str:
 
 
 def build_prompt_context(retriever: Retriever, question: str, k_schema: int, k_examples: int, min_score: float,
-                         ddl: dict[str, str], rule_tables: bool = True) -> PromptContext:
+                         ddl: dict[str, str], rule_tables: bool = True, pinned: Sequence[str] = ()) -> PromptContext:
     """The context B1 (k_examples = 0), B2 and the agent start from; the question is embedded once."""
     vector = retriever.embed_query(question)
-    schema = build_schema_context(retriever, vector, k_schema, min_score, ddl, rule_tables)
+    schema = build_schema_context(retriever, vector, k_schema, min_score, ddl, rule_tables, pinned)
     examples = retriever.search_vector(vector, k_examples, min_score, kind="example") if k_examples else []
     text = schema.text + (f"\n\n{format_examples(examples)}" if examples else "")
     return PromptContext(text=text, schema=schema, examples=examples)
