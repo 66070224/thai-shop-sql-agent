@@ -1,9 +1,9 @@
 {
   "config": "b2",
-  "timestamp": "20261023-125115",
+  "timestamp": "20261023-130044",
   "model": "gemma-4-E4B-it",
   "temperature": 0.0,
-  "results_file": "b2_20261023-125115.jsonl",
+  "results_file": "b2_20261023-130044.jsonl",
   "testset_sha256": "c5d3c50de41b09412607cac70eeaecd8e8e716c36570bc42f4629e796afcf6ff",
   "db_sha256": "a26dda0681ba8f35c20a8a69b3252f76f526edca24d9595190890dc7ab4a2a92",
   "subset_ids": null,
@@ -11,14 +11,18 @@
     "k_schema": 5,
     "k_examples": 1,
     "min_score": 0.35,
-    "rule_tables": true
+    "rule_tables": true,
+    "pinned_rules": [
+      "rule:sales-revenue-definition",
+      "rule:province-names"
+    ]
   },
   "overall": {
     "n": 30,
-    "ex": 0.8333,
-    "ex_strict": 0.7333,
-    "valid_sql_rate": 0.9667,
-    "avg_latency_s": 1.123
+    "ex": 0.9,
+    "ex_strict": 0.7667,
+    "valid_sql_rate": 1.0,
+    "avg_latency_s": 1.237
   },
   "by_difficulty": {
     "easy": {
@@ -26,37 +30,37 @@
       "ex": 1.0,
       "ex_strict": 0.9,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 0.547
+      "avg_latency_s": 0.643
     },
     "medium": {
       "n": 12,
-      "ex": 0.8333,
-      "ex_strict": 0.6667,
+      "ex": 1.0,
+      "ex_strict": 0.8333,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 1.08
+      "avg_latency_s": 1.236
     },
     "hard": {
       "n": 8,
       "ex": 0.625,
-      "ex_strict": 0.625,
-      "valid_sql_rate": 0.875,
-      "avg_latency_s": 1.909
+      "ex_strict": 0.5,
+      "valid_sql_rate": 1.0,
+      "avg_latency_s": 1.982
     }
   },
   "by_lang": {
     "th": {
       "n": 15,
       "ex": 0.9333,
-      "ex_strict": 0.8,
-      "valid_sql_rate": 0.9333,
-      "avg_latency_s": 1.112
+      "ex_strict": 0.7333,
+      "valid_sql_rate": 1.0,
+      "avg_latency_s": 1.178
     },
     "en": {
       "n": 15,
-      "ex": 0.7333,
-      "ex_strict": 0.6667,
+      "ex": 0.8667,
+      "ex_strict": 0.8,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 1.135
+      "avg_latency_s": 1.296
     }
   }
 }

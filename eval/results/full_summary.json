@@ -1,9 +1,9 @@
 {
   "config": "full",
-  "timestamp": "20261023-124919",
+  "timestamp": "20261023-125651",
   "model": "gemma-4-E4B-it",
   "temperature": 0.0,
-  "results_file": "full_20261023-124919.jsonl",
+  "results_file": "full_20261023-125651.jsonl",
   "testset_sha256": "c5d3c50de41b09412607cac70eeaecd8e8e716c36570bc42f4629e796afcf6ff",
   "db_sha256": "a26dda0681ba8f35c20a8a69b3252f76f526edca24d9595190890dc7ab4a2a92",
   "subset_ids": null,
@@ -11,14 +11,18 @@
     "k_schema": 5,
     "k_examples": 1,
     "min_score": 0.35,
-    "rule_tables": true
+    "rule_tables": true,
+    "pinned_rules": [
+      "rule:sales-revenue-definition",
+      "rule:province-names"
+    ]
   },
   "overall": {
     "n": 30,
-    "ex": 0.8667,
+    "ex": 0.9,
     "ex_strict": 0.7333,
     "valid_sql_rate": 1.0,
-    "avg_latency_s": 2.464
+    "avg_latency_s": 2.08
   },
   "by_difficulty": {
     "easy": {
@@ -26,37 +30,37 @@
       "ex": 1.0,
       "ex_strict": 0.9,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 1.196
+      "avg_latency_s": 1.238
     },
     "medium": {
       "n": 12,
-      "ex": 0.9167,
-      "ex_strict": 0.75,
+      "ex": 1.0,
+      "ex_strict": 0.8333,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 1.982
+      "avg_latency_s": 1.958
     },
     "hard": {
       "n": 8,
       "ex": 0.625,
-      "ex_strict": 0.5,
+      "ex_strict": 0.375,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 4.77
+      "avg_latency_s": 3.316
     }
   },
   "by_lang": {
     "th": {
       "n": 15,
       "ex": 0.9333,
-      "ex_strict": 0.7333,
+      "ex_strict": 0.6667,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 2.0
+      "avg_latency_s": 1.936
     },
     "en": {
       "n": 15,
-      "ex": 0.8,
-      "ex_strict": 0.7333,
+      "ex": 0.8667,
+      "ex_strict": 0.8,
       "valid_sql_rate": 1.0,
-      "avg_latency_s": 2.928
+      "avg_latency_s": 2.225
     }
   }
 }
