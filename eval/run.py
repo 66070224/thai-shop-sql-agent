@@ -5,9 +5,12 @@ executed, for every config including b0; a guard rejection counts as invalid SQL
 is the model's query, ``exec_sql`` what was actually run.
 
     uv run --env-file .env eval/run.py --config b0
+    uv run --env-file .env eval/run.py --config b1 --k-schema 3 --min-score 0.0
+    uv run --env-file .env eval/run.py --config b2 --k-schema 3 --k-examples 3 --min-score 0.0
 
-Adding a config (b1, b2, full) = adding a factory to CONFIGS that returns an object with
-``predict(question) -> Prediction``; the scoring and reporting below stay the same.
+Adding a config (b1, b2, full) = adding a factory to CONFIGS that takes (conn, retrieval params)
+and returns an object with ``predict(question) -> Prediction``; the scoring and reporting below
+stay the same. Retrieval params are required for b1/b2 until eval/sweep.py sets defaults.
 """
 
 import argparse
@@ -17,15 +20,17 @@ import sqlite3
 import sys
 import time
 from collections.abc import Callable
+from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Protocol
 
-from thai_shop_agent.baseline import Prediction, ZeroShotBaseline
-from thai_shop_agent.config import MODEL, QUERY_TIMEOUT_S, TEMPERATURE
+from thai_shop_agent.baseline import Prediction, RetrievalBaseline, ZeroShotBaseline
+from thai_shop_agent.config import MODEL, QUERY_TIMEOUT_S, TEMPERATURE, RetrievalParams
 from thai_shop_agent.db import DB_PATH, connect_ro, run_query
 from thai_shop_agent.eval_metrics import ex_match, ex_strict
-from thai_shop_agent.llm import LLM
+from thai_shop_agent.llm import LLM, Embedder
+from thai_shop_agent.retrieval import Retriever
 from thai_shop_agent.sql_guard import GuardError, prepare
 
 EVAL_DIR = Path(__file__).resolve().parent
@@ -37,9 +42,12 @@ class Predictor(Protocol):
     def predict(self, question: str) -> Prediction: ...
 
 
-CONFIGS: dict[str, Callable[[sqlite3.Connection], Predictor]] = {
-    "b0": lambda conn: ZeroShotBaseline(LLM(), conn),
+CONFIGS: dict[str, Callable[[sqlite3.Connection, RetrievalParams | None], Predictor]] = {
+    "b0": lambda conn, params: ZeroShotBaseline(LLM(), conn),
+    "b1": lambda conn, params: RetrievalBaseline(LLM(), conn, Retriever(Embedder()), params),
+    "b2": lambda conn, params: RetrievalBaseline(LLM(), conn, Retriever(Embedder()), params),
 }
+RETRIEVAL_CONFIGS = {"b1", "b2"}
 
 
 def load_testset(path: Path = TESTSET) -> list[dict]:
@@ -52,7 +60,8 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
     gold_cols, gold_rows = run_query(conn, item["gold_sql"], timeout_s)
     rec = {"id": item["id"], "lang": item["lang"], "difficulty": item["difficulty"], "question": item["question"],
            "pred_sql": None, "exec_sql": None, "ok": False, "error": None, "ex": False, "ex_strict": False, "latency_s": None,
-           "prompt_tokens": None, "completion_tokens": None, "llm_calls": 0, "raw_output": None}
+           "prompt_tokens": None, "completion_tokens": None, "llm_calls": 0, "raw_output": None,
+           "context_ids": None}
     t0 = time.perf_counter()
     try:
         pred = predictor.predict(item["question"])
@@ -61,7 +70,8 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
         rec["latency_s"] = round(time.perf_counter() - t0, 3)
         return rec
     rec.update(pred_sql=pred.sql, raw_output=pred.raw_output, prompt_tokens=pred.prompt_tokens,
-               completion_tokens=pred.completion_tokens, llm_calls=pred.llm_calls)
+               completion_tokens=pred.completion_tokens, llm_calls=pred.llm_calls,
+               context_ids=pred.context_ids or None)
     try:
         rec["exec_sql"] = prepare(pred.sql)
     except GuardError as e:
@@ -115,19 +125,38 @@ def print_table(summary: dict) -> None:
                   f"{s['avg_latency_s']:>11.2f}")
 
 
+def retrieval_params(ap: argparse.ArgumentParser, args: argparse.Namespace) -> RetrievalParams | None:
+    if args.config not in RETRIEVAL_CONFIGS:
+        return None
+    k_examples = 0 if args.config == "b1" else args.k_examples
+    missing = [name for name, v in (("--k-schema", args.k_schema), ("--min-score", args.min_score),
+                                    ("--k-examples", k_examples)) if v is None]
+    if missing:
+        ap.error(f"--config {args.config} needs {' '.join(missing)} (no defaults until eval/sweep.py picks them)")
+    if args.config == "b2" and k_examples < 1:
+        ap.error("--config b2 needs --k-examples >= 1 (k_examples = 0 is b1)")
+    return RetrievalParams(k_schema=args.k_schema, k_examples=k_examples, min_score=args.min_score,
+                           rule_tables=not args.no_rule_tables)
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Evaluate a text-to-SQL config on the test set")
     ap.add_argument("--config", required=True, choices=sorted(CONFIGS))
     ap.add_argument("--ids", nargs="*", help="only run these question ids (smoke test)")
     ap.add_argument("--timeout", type=float, default=QUERY_TIMEOUT_S, help="per-query timeout in seconds")
+    ap.add_argument("--k-schema", type=int, help="table/rule chunks to retrieve (b1, b2)")
+    ap.add_argument("--k-examples", type=int, help="examples to retrieve (b2; b1 is always 0)")
+    ap.add_argument("--min-score", type=float, help="cosine threshold for retrieval (b1, b2)")
+    ap.add_argument("--no-rule-tables", action="store_true", help="only DDL of retrieved table chunks")
     args = ap.parse_args()
+    params = retrieval_params(ap, args)
 
     items = load_testset()
     if args.ids:
         items = [i for i in items if i["id"] in set(args.ids)]
     conn = connect_ro()
-    predictor = CONFIGS[args.config](conn)
+    predictor = CONFIGS[args.config](conn, params)
 
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     RESULTS_DIR.mkdir(exist_ok=True)
@@ -151,6 +180,7 @@ def main() -> int:
         "testset_sha256": sha256(TESTSET),
         "db_sha256": sha256(DB_PATH),
         "subset_ids": args.ids or None,
+        "retrieval_params": asdict(params) if params else None,
         **summarize(records),
     }
     # a per-run copy keeps earlier runs comparable; {config}_summary.json is always the latest
