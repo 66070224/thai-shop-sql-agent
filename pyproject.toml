@@ -5,8 +5,11 @@ description = "Text-to-SQL agent over a synthetic Thai online-shop database"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "fastapi>=0.161.1",
     "openai>=3.37.0",
     "pydantic>=2.14.1",
+    "sqlglot>=30.24.0",
+    "uvicorn>=0.54.0",
 ]
 
 [build-system]
