@@ -108,7 +108,7 @@ trace ด้านล่างมาจากการรัน agent แยก�
 หลังปักกฎ `rule:sales-revenue-definition` อยู่ใน context เริ่มต้นแล้ว B1/B2 จึงตอบข้อนี้ถูกทุกรอบ และ agent ไม่จำเป็นต้องค้นเอง
 — demo นี้จึงแสดงพฤติกรรมการค้นของ agent ได้เฉพาะเมื่อรันด้วย `--no-pin-rules`)
 
-### ล้มเหลว: q26 (hard, en)
+### ล้มเหลว: q26 (hard, en) — ก่อนปักกฎ (demo ล้มเหลวปัจจุบันคือ q25 ในหัวข้อ "Demo หลังปักกฎ")
 1. retrieval: `table:categories, table:products, table:customers, rule:dates-and-time-periods, rule:duplicate-customers, ex37`
 2. `run_sql` ด้วย `province = 'กรุงเทพฯ'` → 0 แถว
 3. `run_sql "SELECT DISTINCT province FROM customers LIMIT 10"` → เห็น `กรุงเทพมหานคร` และ `Bangkok`
@@ -156,8 +156,33 @@ EX 0.900 (27/30) ทั้งสองรอบ, EX-strict 0.733, valid SQL 1.00
 
 ### Demo หลังปักกฎ
 
-trace ล้มเหลวของ q26 ด้านบนมาจากก่อนปักกฎ: ตอนนี้ q26 ยังล้มจริง (ทั้งสองรอบ eval) แต่ล้มเพราะ `name_th` เท่านั้น
-ลำดับ event แบบเดิม (query สำรวจกลายเป็นคำตอบ) จึงอาจไม่เกิดซ้ำ ข้อเสนอสำหรับ demo ล้มเหลว (ยังไม่ได้รัน trace ใหม่ รอตัดสิน):
-- **q25 (hard, th)** — ผิดเงียบ: SQL รันได้ ผลดูสมเหตุสมผล ใช้กฎยอดขายถูก แต่ AND/OR ทำให้ปี 2025 รวม order ที่ยกเลิก
-  ล้มเหมือนกันทั้ง 4 รอบ (ก่อน 2 หลัง 2) จึง reproduce ได้แน่นอนที่สุด
-- หรือ **q26** — แสดงว่ากฎถูกใช้ครบแล้ว แต่ยังผิดเพราะภาษาของชื่อหมวด
+demo ล้มเหลวของค่า default ปัจจุบันคือ **q25** (แทน trace q26 ด้านบน ซึ่งมาจากก่อนปักกฎ: ตอนนี้ q26 ล้มเพราะ `name_th` เท่านั้น
+และลำดับ event แบบเดิมอาจไม่เกิดซ้ำ) เลือก q25 เพราะล้มแบบเดียวกันทุกรอบของ `full` (ก่อนปัก 2 รอบ หลังปัก 2 รอบ) จึง reproduce ได้แน่นอนที่สุด
+
+trace ด้านล่างมาจากการรัน agent แยกต่างหาก (2026-10-23 13:08, ค่า default ปัจจุบัน: k_schema=5, k_examples=1, min_score=0.35,
+pinned rules on) ไม่ใช่รอบที่ใช้ให้คะแนน แต่ `FinalAnswer.sql` ตรงกับ `pred_sql` ของ q25 ในรอบ eval ของ `full` ทั้ง 4 รอบ
+(ก่อนปัก 2 หลังปัก 2) ทุกตัวอักษร
+
+#### ล้มเหลว: q25 (hard, th, ผิดเงียบ)
+> ยอดขายวัน 11.11 ของปี 2024 และปี 2025 แต่ละปีเท่าไหร่
+
+1. retrieval: `relationships, rule:sales-revenue-definition, rule:province-names` (ปักไว้) +
+   `rule:dates-and-time-periods (0.485), table:orders, table:customers, rule:duplicate-customers, table:order_items, ex34 (0.705)`
+   — มีทั้งนิยามยอดขาย กฎวันที่ และตัวอย่าง ex34 (ยอดขายวัน 12.12 แบบปีเดียว ไม่มี `OR`)
+2. `run_sql` (step 1):
+   ```sql
+   SELECT strftime('%Y', created_at) AS year, SUM(oi.quantity * oi.unit_price - oi.discount) AS sales
+   FROM orders o JOIN order_items oi ON oi.order_id = o.order_id
+   WHERE o.status NOT IN ('cancelled', 'refunded') AND date(o.created_at) = '2024-11-11' OR date(o.created_at) = '2025-11-11'
+   GROUP BY year
+   ```
+   → รันสำเร็จ 2 แถว: 2024 = 758,090.44, 2025 = 775,757.86
+3. answer (`stopped_reason: answered`, 2 LLM calls, 5,296 prompt tokens): "ยอดขายวัน 11.11 ของปี 2024 คือ 758090.44 และปี 2025 คือ 775757.86"
+   citations: tables `order_items, orders`; chunks รวม `rule:sales-revenue-definition`
+
+gold: 2024 = 758,090.44 (ตรง), **2025 = 680,605.66** — คำตอบปี 2025 เกินไป 95,152.20 เพราะ `AND` ผูกแน่นกว่า `OR`
+ตัวกรอง `status NOT IN ('cancelled', 'refunded')` จึงใช้กับเงื่อนไขปี 2024 เท่านั้น ยอดปี 2025 รวม order ที่ยกเลิก/คืนเงินเข้าไปด้วย
+
+แสดงข้อจำกัดที่การปักกฎแก้ไม่ได้: กฎที่ต้องใช้อยู่ใน context ครบและ model ใช้สูตรยอดขายถูก แต่ประกอบเงื่อนไขผิด
+SQL รันได้ ผลมี 2 แถวตามที่ถาม ตัวเลขดูสมเหตุสมผล และปีหนึ่งถูกด้วย agent จึงไม่มีสัญญาณ (error, 0 แถว) ให้ตรวจซ้ำ
+และตอบทันทีหลัง SQL แรก — ข้อเสนอแก้ (ไม่ได้ทำ) อยู่ในรายงาน before/after: แนะนำให้ครอบ `OR` ด้วยวงเล็บ หรือเพิ่มตัวอย่างหลายช่วงวันที่
