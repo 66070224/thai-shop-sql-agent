@@ -1,5 +1,9 @@
 """Run one system config over eval/testset.jsonl and write per-question results + a summary.
 
+Every predicted SQL goes through sql_guard.prepare (clean -> guard -> LIMIT 100) before it is
+executed, for every config including b0; a guard rejection counts as invalid SQL. ``pred_sql``
+is the model's query, ``exec_sql`` what was actually run.
+
     uv run --env-file .env eval/run.py --config b0
 
 Adding a config (b1, b2, full) = adding a factory to CONFIGS that returns an object with
@@ -22,6 +26,7 @@ from thai_shop_agent.config import MODEL, QUERY_TIMEOUT_S, TEMPERATURE
 from thai_shop_agent.db import DB_PATH, connect_ro, run_query
 from thai_shop_agent.eval_metrics import ex_match, ex_strict
 from thai_shop_agent.llm import LLM
+from thai_shop_agent.sql_guard import GuardError, prepare
 
 EVAL_DIR = Path(__file__).resolve().parent
 TESTSET = EVAL_DIR / "testset.jsonl"
@@ -46,7 +51,7 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
                   timeout_s: float = QUERY_TIMEOUT_S) -> dict:
     gold_cols, gold_rows = run_query(conn, item["gold_sql"], timeout_s)
     rec = {"id": item["id"], "lang": item["lang"], "difficulty": item["difficulty"], "question": item["question"],
-           "pred_sql": None, "ok": False, "error": None, "ex": False, "ex_strict": False, "latency_s": None,
+           "pred_sql": None, "exec_sql": None, "ok": False, "error": None, "ex": False, "ex_strict": False, "latency_s": None,
            "prompt_tokens": None, "completion_tokens": None, "llm_calls": 0, "raw_output": None}
     t0 = time.perf_counter()
     try:
@@ -58,7 +63,13 @@ def evaluate_item(item: dict, predictor: Predictor, conn: sqlite3.Connection,
     rec.update(pred_sql=pred.sql, raw_output=pred.raw_output, prompt_tokens=pred.prompt_tokens,
                completion_tokens=pred.completion_tokens, llm_calls=pred.llm_calls)
     try:
-        pred_cols, pred_rows = run_query(conn, pred.sql, timeout_s)
+        rec["exec_sql"] = prepare(pred.sql)
+    except GuardError as e:
+        rec["error"] = f"guard: {e}"
+        rec["latency_s"] = round(time.perf_counter() - t0, 3)
+        return rec
+    try:
+        pred_cols, pred_rows = run_query(conn, rec["exec_sql"], timeout_s)
     except Exception as e:  # noqa: BLE001 - any SQL failure makes the prediction invalid
         rec["error"] = f"{type(e).__name__}: {e}"
     else:
@@ -142,8 +153,10 @@ def main() -> int:
         "subset_ids": args.ids or None,
         **summarize(records),
     }
+    # a per-run copy keeps earlier runs comparable; {config}_summary.json is always the latest
     summary_path = RESULTS_DIR / f"{args.config}_summary.json"
-    summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    for path in (RESULTS_DIR / f"{args.config}_{stamp}_summary.json", summary_path):
+        path.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print_table(summary)
     print(f"\n-> {results_path}\n-> {summary_path}")
     return 0

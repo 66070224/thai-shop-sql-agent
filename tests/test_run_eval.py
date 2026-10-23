@@ -88,3 +88,19 @@ def test_query_timeout():
     with pytest.raises(QueryTimeout):
         run_query(conn, slow, timeout_s=0.2)
     assert run_query(conn, "SELECT 1")[1] == [(1,)]  # connection still usable
+
+
+@needs_db
+def test_guard_rejection_is_invalid_sql():
+    item = run.load_testset()[0]
+    rec = run.evaluate_item(item, FixedPredictor(lambda q: "SELECT COUNT(*) FROM categories; DROP TABLE orders"),
+                            connect_ro())
+    assert (rec["ok"], rec["ex"], rec["exec_sql"]) == (False, False, None)
+    assert rec["error"].startswith("guard: only one SQL statement")
+
+
+@needs_db
+def test_pred_sql_runs_with_limit():
+    item = run.load_testset()[0]
+    rec = run.evaluate_item(item, FixedPredictor(lambda q: "```sql\nSELECT COUNT(*) FROM categories;\n```"), connect_ro())
+    assert rec["exec_sql"] == "SELECT COUNT(*) FROM categories\nLIMIT 100" and rec["ex"] is True
