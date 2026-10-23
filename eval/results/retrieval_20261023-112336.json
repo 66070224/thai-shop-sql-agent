@@ -1,0 +1,4986 @@
+{
+ "timestamp": "20261023-112336",
+ "model": "bge-m3",
+ "sources": {
+  "schema_docs.md": "19b369e7a57ef88e681734488532606094792d185a249e611cdff8469d28df2d",
+  "examples.jsonl": "e05a550ea527561b6cc43b0860146305b7507d21e4efbe0aa228e188a29adf78"
+ },
+ "ks": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8
+ ],
+ "min_scores": [
+  0.0,
+  0.3,
+  0.35,
+  0.4,
+  0.45,
+  0.5,
+  0.55,
+  0.6
+ ],
+ "modes": {
+  "mixed_rule_tables": {
+   "0.0": {
+    "1": {
+     "overall": 0.7367,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.7083,
+     "difficulty=hard": 0.575,
+     "lang=th": 0.6911,
+     "lang=en": 0.7822,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.8956,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8889,
+     "difficulty=hard": 0.775,
+     "lang=th": 0.9156,
+     "lang=en": 0.8756,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.9556,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.875,
+     "lang=th": 0.9733,
+     "lang=en": 0.9378,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.9
+    },
+    "4": {
+     "overall": 0.9689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.925,
+     "lang=th": 0.9867,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 4.0,
+     "avg_rule_chunks": 1.1667
+    },
+    "5": {
+     "overall": 0.9689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.925,
+     "lang=th": 0.9867,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 5.0,
+     "avg_rule_chunks": 1.4
+    },
+    "6": {
+     "overall": 0.9933,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.975,
+     "lang=th": 1.0,
+     "lang=en": 0.9867,
+     "full_recall_rate": 0.9667,
+     "avg_chunks": 6.0,
+     "avg_rule_chunks": 1.7333
+    },
+    "7": {
+     "overall": 1.0,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 1.0,
+     "full_recall_rate": 1.0,
+     "avg_chunks": 7.0,
+     "avg_rule_chunks": 2.0333
+    },
+    "8": {
+     "overall": 1.0,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 1.0,
+     "full_recall_rate": 1.0,
+     "avg_chunks": 8.0,
+     "avg_rule_chunks": 2.6
+    }
+   },
+   "0.3": {
+    "1": {
+     "overall": 0.7367,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.7083,
+     "difficulty=hard": 0.575,
+     "lang=th": 0.6911,
+     "lang=en": 0.7822,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.8956,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8889,
+     "difficulty=hard": 0.775,
+     "lang=th": 0.9156,
+     "lang=en": 0.8756,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.9556,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.875,
+     "lang=th": 0.9733,
+     "lang=en": 0.9378,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.9
+    },
+    "4": {
+     "overall": 0.9689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.925,
+     "lang=th": 0.9867,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 4.0,
+     "avg_rule_chunks": 1.1667
+    },
+    "5": {
+     "overall": 0.9689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.925,
+     "lang=th": 0.9867,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 5.0,
+     "avg_rule_chunks": 1.4
+    },
+    "6": {
+     "overall": 0.9933,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.975,
+     "lang=th": 1.0,
+     "lang=en": 0.9867,
+     "full_recall_rate": 0.9667,
+     "avg_chunks": 6.0,
+     "avg_rule_chunks": 1.7333
+    },
+    "7": {
+     "overall": 1.0,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 1.0,
+     "full_recall_rate": 1.0,
+     "avg_chunks": 7.0,
+     "avg_rule_chunks": 2.0333
+    },
+    "8": {
+     "overall": 1.0,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 1.0,
+     "full_recall_rate": 1.0,
+     "avg_chunks": 7.9667,
+     "avg_rule_chunks": 2.6
+    }
+   },
+   "0.35": {
+    "1": {
+     "overall": 0.7367,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.7083,
+     "difficulty=hard": 0.575,
+     "lang=th": 0.6911,
+     "lang=en": 0.7822,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.8956,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8889,
+     "difficulty=hard": 0.775,
+     "lang=th": 0.9156,
+     "lang=en": 0.8756,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.9556,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.875,
+     "lang=th": 0.9733,
+     "lang=en": 0.9378,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.9
+    },
+    "4": {
+     "overall": 0.9689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.925,
+     "lang=th": 0.9867,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 3.9667,
+     "avg_rule_chunks": 1.1667
+    },
+    "5": {
+     "overall": 0.9689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.925,
+     "lang=th": 0.9867,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 4.9,
+     "avg_rule_chunks": 1.4
+    },
+    "6": {
+     "overall": 0.9933,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.975,
+     "lang=th": 1.0,
+     "lang=en": 0.9867,
+     "full_recall_rate": 0.9667,
+     "avg_chunks": 5.8,
+     "avg_rule_chunks": 1.7
+    },
+    "7": {
+     "overall": 0.9933,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.975,
+     "lang=th": 1.0,
+     "lang=en": 0.9867,
+     "full_recall_rate": 0.9667,
+     "avg_chunks": 6.6667,
+     "avg_rule_chunks": 2.0
+    },
+    "8": {
+     "overall": 0.9933,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.975,
+     "lang=th": 1.0,
+     "lang=en": 0.9867,
+     "full_recall_rate": 0.9667,
+     "avg_chunks": 7.4667,
+     "avg_rule_chunks": 2.5
+    }
+   },
+   "0.4": {
+    "1": {
+     "overall": 0.7367,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.7083,
+     "difficulty=hard": 0.575,
+     "lang=th": 0.6911,
+     "lang=en": 0.7822,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.8956,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8889,
+     "difficulty=hard": 0.775,
+     "lang=th": 0.9156,
+     "lang=en": 0.8756,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 1.9667,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.9422,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.825,
+     "lang=th": 0.9733,
+     "lang=en": 0.9111,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 2.8,
+     "avg_rule_chunks": 0.8333
+    },
+    "4": {
+     "overall": 0.9556,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.875,
+     "lang=th": 0.9867,
+     "lang=en": 0.9244,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 3.6,
+     "avg_rule_chunks": 1.0667
+    },
+    "5": {
+     "overall": 0.9556,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.875,
+     "lang=th": 0.9867,
+     "lang=en": 0.9244,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 4.3,
+     "avg_rule_chunks": 1.2333
+    },
+    "6": {
+     "overall": 0.9733,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.9,
+     "lang=th": 1.0,
+     "lang=en": 0.9467,
+     "full_recall_rate": 0.9333,
+     "avg_chunks": 4.9667,
+     "avg_rule_chunks": 1.4333
+    },
+    "7": {
+     "overall": 0.9733,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.9,
+     "lang=th": 1.0,
+     "lang=en": 0.9467,
+     "full_recall_rate": 0.9333,
+     "avg_chunks": 5.5333,
+     "avg_rule_chunks": 1.6
+    },
+    "8": {
+     "overall": 0.9733,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.9,
+     "lang=th": 1.0,
+     "lang=en": 0.9467,
+     "full_recall_rate": 0.9333,
+     "avg_chunks": 6.0,
+     "avg_rule_chunks": 2.0
+    }
+   },
+   "0.45": {
+    "1": {
+     "overall": 0.69,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.7083,
+     "difficulty=hard": 0.4,
+     "lang=th": 0.6778,
+     "lang=en": 0.7022,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 0.9,
+     "avg_rule_chunks": 0.3333
+    },
+    "2": {
+     "overall": 0.8356,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8889,
+     "difficulty=hard": 0.55,
+     "lang=th": 0.8889,
+     "lang=en": 0.7822,
+     "full_recall_rate": 0.8,
+     "avg_chunks": 1.7,
+     "avg_rule_chunks": 0.7
+    },
+    "3": {
+     "overall": 0.8689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.55,
+     "lang=th": 0.9333,
+     "lang=en": 0.8044,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 2.3667,
+     "avg_rule_chunks": 0.8
+    },
+    "4": {
+     "overall": 0.8689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.55,
+     "lang=th": 0.9333,
+     "lang=en": 0.8044,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 2.8333,
+     "avg_rule_chunks": 0.9333
+    },
+    "5": {
+     "overall": 0.8689,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.55,
+     "lang=th": 0.9333,
+     "lang=en": 0.8044,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 3.1667,
+     "avg_rule_chunks": 1.0
+    },
+    "6": {
+     "overall": 0.88,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.55,
+     "lang=th": 0.9333,
+     "lang=en": 0.8267,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 3.5,
+     "avg_rule_chunks": 1.1
+    },
+    "7": {
+     "overall": 0.88,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.55,
+     "lang=th": 0.9333,
+     "lang=en": 0.8267,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 3.8,
+     "avg_rule_chunks": 1.1333
+    },
+    "8": {
+     "overall": 0.88,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 0.55,
+     "lang=th": 0.9333,
+     "lang=en": 0.8267,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 4.1,
+     "avg_rule_chunks": 1.4
+    }
+   },
+   "0.5": {
+    "1": {
+     "overall": 0.5833,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.5417,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.6111,
+     "lang=en": 0.5556,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.2
+    },
+    "2": {
+     "overall": 0.6667,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6667,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.7111,
+     "lang=en": 0.6222,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.2667,
+     "avg_rule_chunks": 0.4
+    },
+    "3": {
+     "overall": 0.6778,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.7111,
+     "lang=en": 0.6444,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.5667,
+     "avg_rule_chunks": 0.4667
+    },
+    "4": {
+     "overall": 0.6778,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.7111,
+     "lang=en": 0.6444,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.7333,
+     "avg_rule_chunks": 0.5
+    },
+    "5": {
+     "overall": 0.6778,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.7111,
+     "lang=en": 0.6444,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.8667,
+     "avg_rule_chunks": 0.5333
+    },
+    "6": {
+     "overall": 0.6778,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.7111,
+     "lang=en": 0.6444,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 1.9667,
+     "avg_rule_chunks": 0.5333
+    },
+    "7": {
+     "overall": 0.6778,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.7111,
+     "lang=en": 0.6444,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 2.0333,
+     "avg_rule_chunks": 0.5333
+    },
+    "8": {
+     "overall": 0.6778,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.25,
+     "lang=th": 0.7111,
+     "lang=en": 0.6444,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 2.0667,
+     "avg_rule_chunks": 0.5667
+    }
+   },
+   "0.55": {
+    "1": {
+     "overall": 0.3611,
+     "difficulty=easy": 0.6,
+     "difficulty=medium": 0.3194,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.3667,
+     "lang=en": 0.3556,
+     "full_recall_rate": 0.3333,
+     "avg_chunks": 0.4667,
+     "avg_rule_chunks": 0.1333
+    },
+    "2": {
+     "overall": 0.4444,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4444,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.4667,
+     "lang=en": 0.4222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7,
+     "avg_rule_chunks": 0.1667
+    },
+    "3": {
+     "overall": 0.4444,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4444,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.4667,
+     "lang=en": 0.4222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "4": {
+     "overall": 0.4444,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4444,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.4667,
+     "lang=en": 0.4222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "5": {
+     "overall": 0.4444,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4444,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.4667,
+     "lang=en": 0.4222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "6": {
+     "overall": 0.4444,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4444,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.4667,
+     "lang=en": 0.4222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "7": {
+     "overall": 0.4444,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4444,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.4667,
+     "lang=en": 0.4222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "8": {
+     "overall": 0.4444,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4444,
+     "difficulty=hard": 0.125,
+     "lang=th": 0.4667,
+     "lang=en": 0.4222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    }
+   },
+   "0.6": {
+    "1": {
+     "overall": 0.1167,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0417,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0333
+    },
+    "2": {
+     "overall": 0.1333,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1333,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "3": {
+     "overall": 0.1333,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1333,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "4": {
+     "overall": 0.1333,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1333,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "5": {
+     "overall": 0.1333,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1333,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "6": {
+     "overall": 0.1333,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1333,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "7": {
+     "overall": 0.1333,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1333,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "8": {
+     "overall": 0.1333,
+     "difficulty=easy": 0.3,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.1333,
+     "full_recall_rate": 0.1333,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    }
+   }
+  },
+  "mixed": {
+   "0.0": {
+    "1": {
+     "overall": 0.4256,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4306,
+     "difficulty=hard": 0.075,
+     "lang=th": 0.4244,
+     "lang=en": 0.4267,
+     "full_recall_rate": 0.3667,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.6344,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.625,
+     "difficulty=hard": 0.1917,
+     "lang=th": 0.6044,
+     "lang=en": 0.6644,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.7422,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7178,
+     "lang=en": 0.7667,
+     "full_recall_rate": 0.5667,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.9
+    },
+    "4": {
+     "overall": 0.8044,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7639,
+     "difficulty=hard": 0.6208,
+     "lang=th": 0.74,
+     "lang=en": 0.8689,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 4.0,
+     "avg_rule_chunks": 1.1667
+    },
+    "5": {
+     "overall": 0.8433,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8333,
+     "difficulty=hard": 0.6625,
+     "lang=th": 0.7956,
+     "lang=en": 0.8911,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 5.0,
+     "avg_rule_chunks": 1.4
+    },
+    "6": {
+     "overall": 0.9222,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.8125,
+     "lang=th": 0.94,
+     "lang=en": 0.9044,
+     "full_recall_rate": 0.8,
+     "avg_chunks": 6.0,
+     "avg_rule_chunks": 1.7333
+    },
+    "7": {
+     "overall": 0.9522,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.8625,
+     "lang=th": 0.9533,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 7.0,
+     "avg_rule_chunks": 2.0333
+    },
+    "8": {
+     "overall": 0.9522,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.8625,
+     "lang=th": 0.9533,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 8.0,
+     "avg_rule_chunks": 2.6
+    }
+   },
+   "0.3": {
+    "1": {
+     "overall": 0.4256,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4306,
+     "difficulty=hard": 0.075,
+     "lang=th": 0.4244,
+     "lang=en": 0.4267,
+     "full_recall_rate": 0.3667,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.6344,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.625,
+     "difficulty=hard": 0.1917,
+     "lang=th": 0.6044,
+     "lang=en": 0.6644,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.7422,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7178,
+     "lang=en": 0.7667,
+     "full_recall_rate": 0.5667,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.9
+    },
+    "4": {
+     "overall": 0.8044,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7639,
+     "difficulty=hard": 0.6208,
+     "lang=th": 0.74,
+     "lang=en": 0.8689,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 4.0,
+     "avg_rule_chunks": 1.1667
+    },
+    "5": {
+     "overall": 0.8433,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8333,
+     "difficulty=hard": 0.6625,
+     "lang=th": 0.7956,
+     "lang=en": 0.8911,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 5.0,
+     "avg_rule_chunks": 1.4
+    },
+    "6": {
+     "overall": 0.9222,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.8125,
+     "lang=th": 0.94,
+     "lang=en": 0.9044,
+     "full_recall_rate": 0.8,
+     "avg_chunks": 6.0,
+     "avg_rule_chunks": 1.7333
+    },
+    "7": {
+     "overall": 0.9522,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.8625,
+     "lang=th": 0.9533,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 7.0,
+     "avg_rule_chunks": 2.0333
+    },
+    "8": {
+     "overall": 0.9522,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.8625,
+     "lang=th": 0.9533,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8667,
+     "avg_chunks": 7.9667,
+     "avg_rule_chunks": 2.6
+    }
+   },
+   "0.35": {
+    "1": {
+     "overall": 0.4256,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4306,
+     "difficulty=hard": 0.075,
+     "lang=th": 0.4244,
+     "lang=en": 0.4267,
+     "full_recall_rate": 0.3667,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.6344,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.625,
+     "difficulty=hard": 0.1917,
+     "lang=th": 0.6044,
+     "lang=en": 0.6644,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.7422,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7178,
+     "lang=en": 0.7667,
+     "full_recall_rate": 0.5667,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.9
+    },
+    "4": {
+     "overall": 0.7933,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7639,
+     "difficulty=hard": 0.5792,
+     "lang=th": 0.74,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 3.9667,
+     "avg_rule_chunks": 1.1667
+    },
+    "5": {
+     "overall": 0.8211,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8333,
+     "difficulty=hard": 0.5792,
+     "lang=th": 0.7956,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 4.9,
+     "avg_rule_chunks": 1.4
+    },
+    "6": {
+     "overall": 0.8933,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.7042,
+     "lang=th": 0.94,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.7667,
+     "avg_chunks": 5.8,
+     "avg_rule_chunks": 1.7
+    },
+    "7": {
+     "overall": 0.9,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.7292,
+     "lang=th": 0.9533,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.7667,
+     "avg_chunks": 6.6667,
+     "avg_rule_chunks": 2.0
+    },
+    "8": {
+     "overall": 0.9,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.7292,
+     "lang=th": 0.9533,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.7667,
+     "avg_chunks": 7.4667,
+     "avg_rule_chunks": 2.5
+    }
+   },
+   "0.4": {
+    "1": {
+     "overall": 0.4256,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4306,
+     "difficulty=hard": 0.075,
+     "lang=th": 0.4244,
+     "lang=en": 0.4267,
+     "full_recall_rate": 0.3667,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.3667
+    },
+    "2": {
+     "overall": 0.6344,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.625,
+     "difficulty=hard": 0.1917,
+     "lang=th": 0.6044,
+     "lang=en": 0.6644,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.9667,
+     "avg_rule_chunks": 0.7333
+    },
+    "3": {
+     "overall": 0.7256,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.4292,
+     "lang=th": 0.6844,
+     "lang=en": 0.7667,
+     "full_recall_rate": 0.5667,
+     "avg_chunks": 2.8,
+     "avg_rule_chunks": 0.8333
+    },
+    "4": {
+     "overall": 0.7533,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7067,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 3.6,
+     "avg_rule_chunks": 1.0667
+    },
+    "5": {
+     "overall": 0.7644,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.75,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7289,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 4.3,
+     "avg_rule_chunks": 1.2333
+    },
+    "6": {
+     "overall": 0.7867,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7733,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6667,
+     "avg_chunks": 4.9667,
+     "avg_rule_chunks": 1.4333
+    },
+    "7": {
+     "overall": 0.7867,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7733,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6667,
+     "avg_chunks": 5.5333,
+     "avg_rule_chunks": 1.6
+    },
+    "8": {
+     "overall": 0.7867,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7733,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6667,
+     "avg_chunks": 6.0,
+     "avg_rule_chunks": 2.0
+    }
+   },
+   "0.45": {
+    "1": {
+     "overall": 0.4122,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4306,
+     "difficulty=hard": 0.025,
+     "lang=th": 0.4111,
+     "lang=en": 0.4133,
+     "full_recall_rate": 0.3667,
+     "avg_chunks": 0.9,
+     "avg_rule_chunks": 0.3333
+    },
+    "2": {
+     "overall": 0.5967,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.625,
+     "difficulty=hard": 0.05,
+     "lang=th": 0.5778,
+     "lang=en": 0.6156,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.7,
+     "avg_rule_chunks": 0.7
+    },
+    "3": {
+     "overall": 0.6578,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.175,
+     "lang=th": 0.6111,
+     "lang=en": 0.7044,
+     "full_recall_rate": 0.5667,
+     "avg_chunks": 2.3667,
+     "avg_rule_chunks": 0.8
+    },
+    "4": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.8333,
+     "avg_rule_chunks": 0.9333
+    },
+    "5": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 3.1667,
+     "avg_rule_chunks": 1.0
+    },
+    "6": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 3.5,
+     "avg_rule_chunks": 1.1
+    },
+    "7": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 3.8,
+     "avg_rule_chunks": 1.1333
+    },
+    "8": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 4.1,
+     "avg_rule_chunks": 1.4
+    }
+   },
+   "0.5": {
+    "1": {
+     "overall": 0.4056,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4306,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4111,
+     "lang=en": 0.4,
+     "full_recall_rate": 0.3667,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.2
+    },
+    "2": {
+     "overall": 0.5667,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.5833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.5778,
+     "lang=en": 0.5556,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.2667,
+     "avg_rule_chunks": 0.4
+    },
+    "3": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.5667,
+     "avg_rule_chunks": 0.4667
+    },
+    "4": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.7333,
+     "avg_rule_chunks": 0.5
+    },
+    "5": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.8667,
+     "avg_rule_chunks": 0.5333
+    },
+    "6": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.9667,
+     "avg_rule_chunks": 0.5333
+    },
+    "7": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 2.0333,
+     "avg_rule_chunks": 0.5333
+    },
+    "8": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 2.0667,
+     "avg_rule_chunks": 0.5667
+    }
+   },
+   "0.55": {
+    "1": {
+     "overall": 0.25,
+     "difficulty=easy": 0.4,
+     "difficulty=medium": 0.2917,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.3,
+     "lang=en": 0.2,
+     "full_recall_rate": 0.2333,
+     "avg_chunks": 0.4667,
+     "avg_rule_chunks": 0.1333
+    },
+    "2": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.7,
+     "avg_rule_chunks": 0.1667
+    },
+    "3": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "4": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "5": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "6": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "7": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    },
+    "8": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.7333,
+     "avg_rule_chunks": 0.1667
+    }
+   },
+   "0.6": {
+    "1": {
+     "overall": 0.0833,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0417,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.0667,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0333
+    },
+    "2": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "3": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "4": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "5": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "6": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "7": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    },
+    "8": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.2,
+     "avg_rule_chunks": 0.0333
+    }
+   }
+  },
+  "table_only": {
+   "0.0": {
+    "1": {
+     "overall": 0.5978,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.5,
+     "difficulty=hard": 0.3667,
+     "lang=th": 0.5911,
+     "lang=en": 0.6044,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.7622,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7361,
+     "difficulty=hard": 0.5042,
+     "lang=th": 0.7044,
+     "lang=en": 0.82,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.8378,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.6833,
+     "lang=th": 0.8067,
+     "lang=en": 0.8689,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.9278,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9444,
+     "difficulty=hard": 0.8125,
+     "lang=th": 0.9311,
+     "lang=en": 0.9244,
+     "full_recall_rate": 0.8,
+     "avg_chunks": 4.0,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.9522,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.8625,
+     "lang=th": 0.9533,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 5.0,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.9756,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.95,
+     "lang=th": 0.9867,
+     "lang=en": 0.9644,
+     "full_recall_rate": 0.9,
+     "avg_chunks": 6.0,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.9889,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 0.9778,
+     "full_recall_rate": 0.9667,
+     "avg_chunks": 7.0,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 1.0,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 1.0,
+     "full_recall_rate": 1.0,
+     "avg_chunks": 8.0,
+     "avg_rule_chunks": 0.0
+    }
+   },
+   "0.3": {
+    "1": {
+     "overall": 0.5978,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.5,
+     "difficulty=hard": 0.3667,
+     "lang=th": 0.5911,
+     "lang=en": 0.6044,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.7622,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7361,
+     "difficulty=hard": 0.5042,
+     "lang=th": 0.7044,
+     "lang=en": 0.82,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.8378,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.6833,
+     "lang=th": 0.8067,
+     "lang=en": 0.8689,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.9278,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9444,
+     "difficulty=hard": 0.8125,
+     "lang=th": 0.9311,
+     "lang=en": 0.9244,
+     "full_recall_rate": 0.8,
+     "avg_chunks": 4.0,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.9522,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.8625,
+     "lang=th": 0.9533,
+     "lang=en": 0.9511,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 4.9667,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.9756,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 0.95,
+     "lang=th": 0.9867,
+     "lang=en": 0.9644,
+     "full_recall_rate": 0.9,
+     "avg_chunks": 5.9333,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.9889,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9722,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 0.9778,
+     "full_recall_rate": 0.9667,
+     "avg_chunks": 6.9,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 1.0,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 1.0,
+     "difficulty=hard": 1.0,
+     "lang=th": 1.0,
+     "lang=en": 1.0,
+     "full_recall_rate": 1.0,
+     "avg_chunks": 7.7333,
+     "avg_rule_chunks": 0.0
+    }
+   },
+   "0.35": {
+    "1": {
+     "overall": 0.5978,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.5,
+     "difficulty=hard": 0.3667,
+     "lang=th": 0.5911,
+     "lang=en": 0.6044,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.7622,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7361,
+     "difficulty=hard": 0.5042,
+     "lang=th": 0.7044,
+     "lang=en": 0.82,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.0,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.8267,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.6417,
+     "lang=th": 0.8067,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 2.9333,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.8889,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9028,
+     "difficulty=hard": 0.7292,
+     "lang=th": 0.9311,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.7333,
+     "avg_chunks": 3.8333,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.9,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.7292,
+     "lang=th": 0.9533,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.7667,
+     "avg_chunks": 4.6333,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.9167,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.7917,
+     "lang=th": 0.9867,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.8,
+     "avg_chunks": 5.4,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.9167,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9306,
+     "difficulty=hard": 0.7917,
+     "lang=th": 0.9867,
+     "lang=en": 0.8467,
+     "full_recall_rate": 0.8,
+     "avg_chunks": 6.1333,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 0.9278,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.9583,
+     "difficulty=hard": 0.7917,
+     "lang=th": 0.9867,
+     "lang=en": 0.8689,
+     "full_recall_rate": 0.8333,
+     "avg_chunks": 6.8,
+     "avg_rule_chunks": 0.0
+    }
+   },
+   "0.4": {
+    "1": {
+     "overall": 0.5811,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.5,
+     "difficulty=hard": 0.3042,
+     "lang=th": 0.5578,
+     "lang=en": 0.6044,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.9333,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.7289,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.4417,
+     "lang=th": 0.6711,
+     "lang=en": 0.7867,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 1.8,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.7533,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7067,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.6,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.7756,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7778,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7511,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 3.2667,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.7867,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.4917,
+     "lang=th": 0.7733,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.6667,
+     "avg_chunks": 3.8333,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.8033,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.5542,
+     "lang=th": 0.8067,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.7,
+     "avg_chunks": 4.3333,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.8033,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8056,
+     "difficulty=hard": 0.5542,
+     "lang=th": 0.8067,
+     "lang=en": 0.8,
+     "full_recall_rate": 0.7,
+     "avg_chunks": 4.7667,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 0.8144,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.8333,
+     "difficulty=hard": 0.5542,
+     "lang=th": 0.8067,
+     "lang=en": 0.8222,
+     "full_recall_rate": 0.7333,
+     "avg_chunks": 5.1,
+     "avg_rule_chunks": 0.0
+    }
+   },
+   "0.45": {
+    "1": {
+     "overall": 0.54,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.5,
+     "difficulty=hard": 0.15,
+     "lang=th": 0.5111,
+     "lang=en": 0.5689,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.7667,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.6744,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6944,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6111,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 1.4667,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 1.9,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.2,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.4667,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.7,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.6856,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.7222,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.7378,
+     "full_recall_rate": 0.6,
+     "avg_chunks": 2.8667,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 0.6967,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.75,
+     "difficulty=hard": 0.2375,
+     "lang=th": 0.6333,
+     "lang=en": 0.76,
+     "full_recall_rate": 0.6333,
+     "avg_chunks": 3.0,
+     "avg_rule_chunks": 0.0
+    }
+   },
+   "0.5": {
+    "1": {
+     "overall": 0.5,
+     "difficulty=easy": 0.9,
+     "difficulty=medium": 0.4583,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.4778,
+     "lang=en": 0.5222,
+     "full_recall_rate": 0.4333,
+     "avg_chunks": 0.6667,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.0,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.1667,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.2667,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.3667,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.4667,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.5,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 0.5944,
+     "difficulty=easy": 1.0,
+     "difficulty=medium": 0.6111,
+     "difficulty=hard": 0.0625,
+     "lang=th": 0.5778,
+     "lang=en": 0.6111,
+     "full_recall_rate": 0.5333,
+     "avg_chunks": 1.5,
+     "avg_rule_chunks": 0.0
+    }
+   },
+   "0.55": {
+    "1": {
+     "overall": 0.3167,
+     "difficulty=easy": 0.6,
+     "difficulty=medium": 0.2917,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.3667,
+     "lang=en": 0.2667,
+     "full_recall_rate": 0.3,
+     "avg_chunks": 0.4,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.5333,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.5667,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.5667,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.5667,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.5667,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.5667,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 0.4,
+     "difficulty=easy": 0.7,
+     "difficulty=medium": 0.4167,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.4667,
+     "lang=en": 0.3333,
+     "full_recall_rate": 0.4,
+     "avg_chunks": 0.5667,
+     "avg_rule_chunks": 0.0
+    }
+   },
+   "0.6": {
+    "1": {
+     "overall": 0.0833,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0417,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.0667,
+     "avg_chunks": 0.1333,
+     "avg_rule_chunks": 0.0
+    },
+    "2": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0
+    },
+    "3": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0
+    },
+    "4": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0
+    },
+    "5": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0
+    },
+    "6": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0
+    },
+    "7": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0
+    },
+    "8": {
+     "overall": 0.1,
+     "difficulty=easy": 0.2,
+     "difficulty=medium": 0.0833,
+     "difficulty=hard": 0.0,
+     "lang=th": 0.1333,
+     "lang=en": 0.0667,
+     "full_recall_rate": 0.1,
+     "avg_chunks": 0.1667,
+     "avg_rule_chunks": 0.0
+    }
+   }
+  }
+ },
+ "per_question": [
+  {
+   "id": "q01",
+   "lang": "en",
+   "difficulty": "easy",
+   "gold_tables": [
+    "categories"
+   ],
+   "mixed_ranking": [
+    [
+     "table:categories",
+     0.6702
+    ],
+    [
+     "table:products",
+     0.5317
+    ],
+    [
+     "table:reviews",
+     0.4806
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4714
+    ],
+    [
+     "table:order_items",
+     0.4671
+    ],
+    [
+     "table:customers",
+     0.4639
+    ],
+    [
+     "table:coupons",
+     0.4589
+    ],
+    [
+     "table:orders",
+     0.4573
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4333
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4259
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4252
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4252
+    ],
+    [
+     "table:payments",
+     0.3908
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3892
+    ],
+    [
+     "rule:province-names",
+     0.3797
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex12",
+     0.6211
+    ],
+    [
+     "ex24",
+     0.598
+    ],
+    [
+     "ex05",
+     0.5786
+    ],
+    [
+     "ex13",
+     0.5699
+    ],
+    [
+     "ex22",
+     0.5684
+    ]
+   ]
+  },
+  {
+   "id": "q02",
+   "lang": "th",
+   "difficulty": "easy",
+   "gold_tables": [
+    "products"
+   ],
+   "mixed_ranking": [
+    [
+     "table:categories",
+     0.6011
+    ],
+    [
+     "table:products",
+     0.5907
+    ],
+    [
+     "table:order_items",
+     0.5337
+    ],
+    [
+     "table:reviews",
+     0.5139
+    ],
+    [
+     "table:orders",
+     0.5093
+    ],
+    [
+     "table:customers",
+     0.5043
+    ],
+    [
+     "table:coupons",
+     0.5001
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4954
+    ],
+    [
+     "table:payments",
+     0.4676
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4639
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4589
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.423
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4086
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.404
+    ],
+    [
+     "rule:province-names",
+     0.3974
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex12",
+     0.7153
+    ],
+    [
+     "ex05",
+     0.6895
+    ],
+    [
+     "ex22",
+     0.675
+    ],
+    [
+     "ex24",
+     0.6544
+    ],
+    [
+     "ex38",
+     0.6371
+    ]
+   ]
+  },
+  {
+   "id": "q03",
+   "lang": "en",
+   "difficulty": "easy",
+   "gold_tables": [
+    "products"
+   ],
+   "mixed_ranking": [
+    [
+     "table:products",
+     0.5455
+    ],
+    [
+     "table:categories",
+     0.504
+    ],
+    [
+     "table:order_items",
+     0.4501
+    ],
+    [
+     "table:payments",
+     0.4081
+    ],
+    [
+     "table:coupons",
+     0.399
+    ],
+    [
+     "table:reviews",
+     0.3847
+    ],
+    [
+     "table:orders",
+     0.3839
+    ],
+    [
+     "table:customers",
+     0.3785
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.3709
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3548
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.349
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3428
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3303
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.32
+    ],
+    [
+     "rule:province-names",
+     0.3028
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex02",
+     0.7712
+    ],
+    [
+     "ex10",
+     0.7092
+    ],
+    [
+     "ex28",
+     0.6243
+    ],
+    [
+     "ex05",
+     0.6185
+    ],
+    [
+     "ex37",
+     0.5207
+    ]
+   ]
+  },
+  {
+   "id": "q04",
+   "lang": "th",
+   "difficulty": "easy",
+   "gold_tables": [
+    "reviews"
+   ],
+   "mixed_ranking": [
+    [
+     "table:reviews",
+     0.5786
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4874
+    ],
+    [
+     "table:customers",
+     0.4727
+    ],
+    [
+     "table:orders",
+     0.4709
+    ],
+    [
+     "table:order_items",
+     0.4535
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4524
+    ],
+    [
+     "table:coupons",
+     0.4486
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4434
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4337
+    ],
+    [
+     "table:products",
+     0.4256
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4231
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4183
+    ],
+    [
+     "table:payments",
+     0.4174
+    ],
+    [
+     "table:categories",
+     0.4162
+    ],
+    [
+     "rule:province-names",
+     0.4031
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex23",
+     0.7646
+    ],
+    [
+     "ex29",
+     0.7511
+    ],
+    [
+     "ex40",
+     0.7379
+    ],
+    [
+     "ex04",
+     0.7226
+    ],
+    [
+     "ex05",
+     0.6234
+    ]
+   ]
+  },
+  {
+   "id": "q05",
+   "lang": "en",
+   "difficulty": "easy",
+   "gold_tables": [
+    "orders"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.6134
+    ],
+    [
+     "table:orders",
+     0.5524
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.5151
+    ],
+    [
+     "table:reviews",
+     0.4768
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4713
+    ],
+    [
+     "table:payments",
+     0.4703
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4582
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4502
+    ],
+    [
+     "table:order_items",
+     0.4483
+    ],
+    [
+     "table:customers",
+     0.4304
+    ],
+    [
+     "table:coupons",
+     0.419
+    ],
+    [
+     "table:products",
+     0.3902
+    ],
+    [
+     "table:categories",
+     0.3668
+    ],
+    [
+     "rule:province-names",
+     0.343
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3376
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex08",
+     0.7972
+    ],
+    [
+     "ex03",
+     0.7808
+    ],
+    [
+     "ex22",
+     0.7339
+    ],
+    [
+     "ex18",
+     0.7056
+    ],
+    [
+     "ex20",
+     0.6867
+    ]
+   ]
+  },
+  {
+   "id": "q06",
+   "lang": "th",
+   "difficulty": "easy",
+   "gold_tables": [
+    "coupons"
+   ],
+   "mixed_ranking": [
+    [
+     "table:coupons",
+     0.6963
+    ],
+    [
+     "table:order_items",
+     0.593
+    ],
+    [
+     "table:payments",
+     0.5261
+    ],
+    [
+     "table:orders",
+     0.5222
+    ],
+    [
+     "rule:duplicate-customers",
+     0.5071
+    ],
+    [
+     "table:customers",
+     0.5031
+    ],
+    [
+     "table:products",
+     0.5018
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.5006
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4864
+    ],
+    [
+     "table:reviews",
+     0.4843
+    ],
+    [
+     "rule:province-names",
+     0.4533
+    ],
+    [
+     "table:categories",
+     0.4505
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4388
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4284
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4003
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex09",
+     0.7501
+    ],
+    [
+     "ex01",
+     0.6627
+    ],
+    [
+     "ex27",
+     0.6394
+    ],
+    [
+     "ex26",
+     0.6067
+    ],
+    [
+     "ex12",
+     0.6032
+    ]
+   ]
+  },
+  {
+   "id": "q07",
+   "lang": "en",
+   "difficulty": "easy",
+   "gold_tables": [
+    "reviews"
+   ],
+   "mixed_ranking": [
+    [
+     "table:reviews",
+     0.5292
+    ],
+    [
+     "table:customers",
+     0.431
+    ],
+    [
+     "table:orders",
+     0.405
+    ],
+    [
+     "table:categories",
+     0.3859
+    ],
+    [
+     "table:products",
+     0.3817
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3779
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3765
+    ],
+    [
+     "table:coupons",
+     0.3739
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3694
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3673
+    ],
+    [
+     "table:payments",
+     0.367
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.3657
+    ],
+    [
+     "table:order_items",
+     0.3532
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3359
+    ],
+    [
+     "rule:province-names",
+     0.3342
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex04",
+     0.6748
+    ],
+    [
+     "ex23",
+     0.6383
+    ],
+    [
+     "ex40",
+     0.6018
+    ],
+    [
+     "ex03",
+     0.5835
+    ],
+    [
+     "ex20",
+     0.5824
+    ]
+   ]
+  },
+  {
+   "id": "q08",
+   "lang": "th",
+   "difficulty": "easy",
+   "gold_tables": [
+    "products"
+   ],
+   "mixed_ranking": [
+    [
+     "table:products",
+     0.5484
+    ],
+    [
+     "table:categories",
+     0.5234
+    ],
+    [
+     "table:order_items",
+     0.4739
+    ],
+    [
+     "table:coupons",
+     0.449
+    ],
+    [
+     "table:customers",
+     0.4071
+    ],
+    [
+     "table:payments",
+     0.4016
+    ],
+    [
+     "table:orders",
+     0.4008
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3955
+    ],
+    [
+     "table:reviews",
+     0.3817
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.3766
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3728
+    ],
+    [
+     "rule:province-names",
+     0.3558
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3481
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3352
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3346
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex01",
+     0.5873
+    ],
+    [
+     "ex24",
+     0.5759
+    ],
+    [
+     "ex02",
+     0.574
+    ],
+    [
+     "ex05",
+     0.5621
+    ],
+    [
+     "ex10",
+     0.5524
+    ]
+   ]
+  },
+  {
+   "id": "q09",
+   "lang": "en",
+   "difficulty": "easy",
+   "gold_tables": [
+    "coupons"
+   ],
+   "mixed_ranking": [
+    [
+     "table:coupons",
+     0.5758
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.536
+    ],
+    [
+     "table:customers",
+     0.4545
+    ],
+    [
+     "table:order_items",
+     0.4163
+    ],
+    [
+     "table:orders",
+     0.4161
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4092
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.398
+    ],
+    [
+     "table:payments",
+     0.3945
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3911
+    ],
+    [
+     "rule:duplicate-customers",
+     0.38
+    ],
+    [
+     "table:categories",
+     0.3681
+    ],
+    [
+     "table:reviews",
+     0.3666
+    ],
+    [
+     "table:products",
+     0.3655
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3654
+    ],
+    [
+     "rule:province-names",
+     0.3558
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex26",
+     0.7417
+    ],
+    [
+     "ex39",
+     0.7013
+    ],
+    [
+     "ex09",
+     0.6656
+    ],
+    [
+     "ex17",
+     0.6063
+    ],
+    [
+     "ex01",
+     0.5773
+    ]
+   ]
+  },
+  {
+   "id": "q10",
+   "lang": "th",
+   "difficulty": "easy",
+   "gold_tables": [
+    "payments"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:multiple-payments-per-order",
+     0.5898
+    ],
+    [
+     "table:payments",
+     0.5817
+    ],
+    [
+     "table:orders",
+     0.4794
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4632
+    ],
+    [
+     "table:customers",
+     0.4317
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4233
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4167
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4164
+    ],
+    [
+     "table:products",
+     0.4038
+    ],
+    [
+     "table:coupons",
+     0.3899
+    ],
+    [
+     "table:order_items",
+     0.3829
+    ],
+    [
+     "table:reviews",
+     0.3806
+    ],
+    [
+     "rule:province-names",
+     0.3685
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3578
+    ],
+    [
+     "table:categories",
+     0.3224
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex44",
+     0.7573
+    ],
+    [
+     "ex19",
+     0.6986
+    ],
+    [
+     "ex07",
+     0.6977
+    ],
+    [
+     "ex22",
+     0.6048
+    ],
+    [
+     "ex03",
+     0.5749
+    ]
+   ]
+  },
+  {
+   "id": "q11",
+   "lang": "th",
+   "difficulty": "medium",
+   "gold_tables": [
+    "customers"
+   ],
+   "mixed_ranking": [
+    [
+     "table:customers",
+     0.5616
+    ],
+    [
+     "rule:duplicate-customers",
+     0.5502
+    ],
+    [
+     "table:orders",
+     0.502
+    ],
+    [
+     "table:products",
+     0.4995
+    ],
+    [
+     "table:reviews",
+     0.4901
+    ],
+    [
+     "table:categories",
+     0.4752
+    ],
+    [
+     "table:order_items",
+     0.4688
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4617
+    ],
+    [
+     "table:coupons",
+     0.4475
+    ],
+    [
+     "table:payments",
+     0.4468
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4185
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4049
+    ],
+    [
+     "rule:province-names",
+     0.3928
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3747
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3612
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex13",
+     0.7345
+    ],
+    [
+     "ex38",
+     0.7308
+    ],
+    [
+     "ex22",
+     0.6833
+    ],
+    [
+     "ex15",
+     0.6699
+    ],
+    [
+     "ex30",
+     0.6327
+    ]
+   ]
+  },
+  {
+   "id": "q12",
+   "lang": "en",
+   "difficulty": "medium",
+   "gold_tables": [
+    "customers"
+   ],
+   "mixed_ranking": [
+    [
+     "table:customers",
+     0.5303
+    ],
+    [
+     "rule:duplicate-customers",
+     0.5004
+    ],
+    [
+     "table:products",
+     0.4799
+    ],
+    [
+     "table:reviews",
+     0.4345
+    ],
+    [
+     "table:orders",
+     0.4177
+    ],
+    [
+     "table:categories",
+     0.4109
+    ],
+    [
+     "rule:province-names",
+     0.4056
+    ],
+    [
+     "table:payments",
+     0.3888
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.3757
+    ],
+    [
+     "table:coupons",
+     0.3755
+    ],
+    [
+     "table:order_items",
+     0.3727
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3706
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3557
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3538
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.2861
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex13",
+     0.6294
+    ],
+    [
+     "ex38",
+     0.6199
+    ],
+    [
+     "ex14",
+     0.6168
+    ],
+    [
+     "ex03",
+     0.5853
+    ],
+    [
+     "ex22",
+     0.568
+    ]
+   ]
+  },
+  {
+   "id": "q13",
+   "lang": "th",
+   "difficulty": "medium",
+   "gold_tables": [
+    "orders",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:sales-revenue-definition",
+     0.5152
+    ],
+    [
+     "table:products",
+     0.403
+    ],
+    [
+     "table:customers",
+     0.3828
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3826
+    ],
+    [
+     "table:orders",
+     0.3737
+    ],
+    [
+     "table:order_items",
+     0.3707
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3595
+    ],
+    [
+     "table:categories",
+     0.3365
+    ],
+    [
+     "table:reviews",
+     0.3331
+    ],
+    [
+     "table:coupons",
+     0.3258
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3119
+    ],
+    [
+     "table:payments",
+     0.3024
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.2899
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.2832
+    ],
+    [
+     "rule:province-names",
+     0.2749
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex17",
+     0.7483
+    ],
+    [
+     "ex34",
+     0.7437
+    ],
+    [
+     "ex36",
+     0.7185
+    ],
+    [
+     "ex35",
+     0.7171
+    ],
+    [
+     "ex39",
+     0.6986
+    ]
+   ]
+  },
+  {
+   "id": "q14",
+   "lang": "en",
+   "difficulty": "medium",
+   "gold_tables": [
+    "payments"
+   ],
+   "mixed_ranking": [
+    [
+     "table:payments",
+     0.5642
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.5171
+    ],
+    [
+     "table:orders",
+     0.4374
+    ],
+    [
+     "table:products",
+     0.4163
+    ],
+    [
+     "table:order_items",
+     0.4073
+    ],
+    [
+     "table:coupons",
+     0.4046
+    ],
+    [
+     "table:customers",
+     0.4038
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3907
+    ],
+    [
+     "table:reviews",
+     0.3859
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3838
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3588
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3397
+    ],
+    [
+     "rule:province-names",
+     0.3288
+    ],
+    [
+     "table:categories",
+     0.3219
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex20",
+     0.6741
+    ],
+    [
+     "ex03",
+     0.6261
+    ],
+    [
+     "ex19",
+     0.6183
+    ],
+    [
+     "ex31",
+     0.6147
+    ],
+    [
+     "ex07",
+     0.5871
+    ]
+   ]
+  },
+  {
+   "id": "q15",
+   "lang": "th",
+   "difficulty": "medium",
+   "gold_tables": [
+    "orders"
+   ],
+   "mixed_ranking": [
+    [
+     "table:orders",
+     0.5788
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.5446
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.5102
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.5059
+    ],
+    [
+     "table:reviews",
+     0.5041
+    ],
+    [
+     "table:order_items",
+     0.4938
+    ],
+    [
+     "table:customers",
+     0.4763
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4613
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4592
+    ],
+    [
+     "table:payments",
+     0.4572
+    ],
+    [
+     "table:coupons",
+     0.4454
+    ],
+    [
+     "table:products",
+     0.4341
+    ],
+    [
+     "table:categories",
+     0.4318
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4268
+    ],
+    [
+     "rule:province-names",
+     0.3574
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex21",
+     0.9197
+    ],
+    [
+     "ex43",
+     0.785
+    ],
+    [
+     "ex22",
+     0.6882
+    ],
+    [
+     "ex03",
+     0.6341
+    ],
+    [
+     "ex12",
+     0.6185
+    ]
+   ]
+  },
+  {
+   "id": "q16",
+   "lang": "en",
+   "difficulty": "medium",
+   "gold_tables": [
+    "orders",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:sales-revenue-definition",
+     0.4517
+    ],
+    [
+     "table:products",
+     0.3571
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3549
+    ],
+    [
+     "table:orders",
+     0.3547
+    ],
+    [
+     "table:customers",
+     0.3419
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3275
+    ],
+    [
+     "table:order_items",
+     0.3063
+    ],
+    [
+     "table:categories",
+     0.29
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.2889
+    ],
+    [
+     "table:coupons",
+     0.286
+    ],
+    [
+     "table:payments",
+     0.2831
+    ],
+    [
+     "table:reviews",
+     0.2792
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.2712
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.2491
+    ],
+    [
+     "rule:province-names",
+     0.2445
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex34",
+     0.7509
+    ],
+    [
+     "ex36",
+     0.7395
+    ],
+    [
+     "ex35",
+     0.6841
+    ],
+    [
+     "ex39",
+     0.6706
+    ],
+    [
+     "ex17",
+     0.6645
+    ]
+   ]
+  },
+  {
+   "id": "q17",
+   "lang": "th",
+   "difficulty": "medium",
+   "gold_tables": [
+    "orders",
+    "order_items",
+    "products"
+   ],
+   "mixed_ranking": [
+    [
+     "table:products",
+     0.5239
+    ],
+    [
+     "table:categories",
+     0.4865
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4833
+    ],
+    [
+     "table:reviews",
+     0.4408
+    ],
+    [
+     "table:orders",
+     0.4171
+    ],
+    [
+     "table:order_items",
+     0.4161
+    ],
+    [
+     "table:customers",
+     0.3952
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3839
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3804
+    ],
+    [
+     "table:coupons",
+     0.3801
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3689
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3616
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3569
+    ],
+    [
+     "table:payments",
+     0.3544
+    ],
+    [
+     "rule:province-names",
+     0.3176
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex10",
+     0.6521
+    ],
+    [
+     "ex02",
+     0.6478
+    ],
+    [
+     "ex05",
+     0.5886
+    ],
+    [
+     "ex24",
+     0.5779
+    ],
+    [
+     "ex37",
+     0.5713
+    ]
+   ]
+  },
+  {
+   "id": "q18",
+   "lang": "en",
+   "difficulty": "medium",
+   "gold_tables": [
+    "products"
+   ],
+   "mixed_ranking": [
+    [
+     "table:categories",
+     0.5797
+    ],
+    [
+     "table:products",
+     0.5589
+    ],
+    [
+     "table:reviews",
+     0.5027
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4819
+    ],
+    [
+     "table:orders",
+     0.4729
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4686
+    ],
+    [
+     "table:order_items",
+     0.4673
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4535
+    ],
+    [
+     "table:coupons",
+     0.4532
+    ],
+    [
+     "table:customers",
+     0.4428
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4325
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4292
+    ],
+    [
+     "rule:province-names",
+     0.4123
+    ],
+    [
+     "table:payments",
+     0.407
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3702
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex24",
+     0.7288
+    ],
+    [
+     "ex12",
+     0.6295
+    ],
+    [
+     "ex22",
+     0.5968
+    ],
+    [
+     "ex08",
+     0.5486
+    ],
+    [
+     "ex19",
+     0.5465
+    ]
+   ]
+  },
+  {
+   "id": "q19",
+   "lang": "th",
+   "difficulty": "medium",
+   "gold_tables": [
+    "categories",
+    "products"
+   ],
+   "mixed_ranking": [
+    [
+     "table:categories",
+     0.6942
+    ],
+    [
+     "table:products",
+     0.6261
+    ],
+    [
+     "table:order_items",
+     0.5793
+    ],
+    [
+     "table:reviews",
+     0.5391
+    ],
+    [
+     "table:orders",
+     0.5262
+    ],
+    [
+     "table:coupons",
+     0.5123
+    ],
+    [
+     "table:customers",
+     0.4979
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4861
+    ],
+    [
+     "table:payments",
+     0.4852
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4737
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4549
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4538
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4461
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4305
+    ],
+    [
+     "rule:province-names",
+     0.4248
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex12",
+     0.7873
+    ],
+    [
+     "ex19",
+     0.6574
+    ],
+    [
+     "ex24",
+     0.6552
+    ],
+    [
+     "ex15",
+     0.6186
+    ],
+    [
+     "ex04",
+     0.6129
+    ]
+   ]
+  },
+  {
+   "id": "q20",
+   "lang": "en",
+   "difficulty": "medium",
+   "gold_tables": [
+    "orders",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:sales-revenue-definition",
+     0.4981
+    ],
+    [
+     "table:order_items",
+     0.469
+    ],
+    [
+     "table:orders",
+     0.4642
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4385
+    ],
+    [
+     "table:reviews",
+     0.4044
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3983
+    ],
+    [
+     "table:payments",
+     0.3924
+    ],
+    [
+     "table:coupons",
+     0.3924
+    ],
+    [
+     "table:customers",
+     0.3896
+    ],
+    [
+     "table:products",
+     0.384
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3738
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3554
+    ],
+    [
+     "table:categories",
+     0.3533
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3486
+    ],
+    [
+     "rule:province-names",
+     0.3028
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex26",
+     0.7352
+    ],
+    [
+     "ex39",
+     0.7174
+    ],
+    [
+     "ex31",
+     0.7032
+    ],
+    [
+     "ex36",
+     0.7031
+    ],
+    [
+     "ex17",
+     0.6869
+    ]
+   ]
+  },
+  {
+   "id": "q21",
+   "lang": "th",
+   "difficulty": "medium",
+   "gold_tables": [
+    "orders",
+    "customers",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "table:customers",
+     0.5214
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4786
+    ],
+    [
+     "table:products",
+     0.464
+    ],
+    [
+     "table:order_items",
+     0.4539
+    ],
+    [
+     "rule:province-names",
+     0.4497
+    ],
+    [
+     "table:orders",
+     0.4447
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4442
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4389
+    ],
+    [
+     "table:categories",
+     0.414
+    ],
+    [
+     "table:payments",
+     0.407
+    ],
+    [
+     "table:coupons",
+     0.4028
+    ],
+    [
+     "table:reviews",
+     0.4019
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3488
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3451
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3308
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex26",
+     0.6729
+    ],
+    [
+     "ex31",
+     0.6659
+    ],
+    [
+     "ex39",
+     0.6418
+    ],
+    [
+     "ex17",
+     0.6318
+    ],
+    [
+     "ex35",
+     0.6105
+    ]
+   ]
+  },
+  {
+   "id": "q22",
+   "lang": "en",
+   "difficulty": "medium",
+   "gold_tables": [
+    "orders",
+    "customers",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:duplicate-customers",
+     0.5739
+    ],
+    [
+     "table:customers",
+     0.5297
+    ],
+    [
+     "table:orders",
+     0.5143
+    ],
+    [
+     "table:reviews",
+     0.5051
+    ],
+    [
+     "table:products",
+     0.486
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4854
+    ],
+    [
+     "table:categories",
+     0.4827
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4753
+    ],
+    [
+     "table:payments",
+     0.4732
+    ],
+    [
+     "table:coupons",
+     0.4708
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4674
+    ],
+    [
+     "table:order_items",
+     0.4668
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.442
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4411
+    ],
+    [
+     "rule:province-names",
+     0.3608
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex30",
+     0.7093
+    ],
+    [
+     "ex11",
+     0.5492
+    ],
+    [
+     "ex29",
+     0.5338
+    ],
+    [
+     "ex20",
+     0.5322
+    ],
+    [
+     "ex38",
+     0.5218
+    ]
+   ]
+  },
+  {
+   "id": "q23",
+   "lang": "th",
+   "difficulty": "hard",
+   "gold_tables": [
+    "reviews",
+    "orders",
+    "order_items",
+    "products",
+    "categories"
+   ],
+   "mixed_ranking": [
+    [
+     "table:reviews",
+     0.4455
+    ],
+    [
+     "table:categories",
+     0.4349
+    ],
+    [
+     "table:products",
+     0.4222
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4145
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4135
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4097
+    ],
+    [
+     "table:order_items",
+     0.3784
+    ],
+    [
+     "table:customers",
+     0.3699
+    ],
+    [
+     "table:coupons",
+     0.3556
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3439
+    ],
+    [
+     "table:orders",
+     0.3435
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3422
+    ],
+    [
+     "rule:province-names",
+     0.302
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.2907
+    ],
+    [
+     "table:payments",
+     0.2888
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex37",
+     0.7343
+    ],
+    [
+     "ex35",
+     0.6452
+    ],
+    [
+     "ex36",
+     0.6154
+    ],
+    [
+     "ex23",
+     0.6011
+    ],
+    [
+     "ex40",
+     0.5907
+    ]
+   ]
+  },
+  {
+   "id": "q24",
+   "lang": "en",
+   "difficulty": "hard",
+   "gold_tables": [
+    "orders",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:sales-revenue-definition",
+     0.5792
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.5411
+    ],
+    [
+     "table:orders",
+     0.5092
+    ],
+    [
+     "table:order_items",
+     0.4892
+    ],
+    [
+     "table:customers",
+     0.4457
+    ],
+    [
+     "table:reviews",
+     0.4444
+    ],
+    [
+     "table:products",
+     0.4436
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.4348
+    ],
+    [
+     "table:coupons",
+     0.4314
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.4314
+    ],
+    [
+     "table:payments",
+     0.4287
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4252
+    ],
+    [
+     "table:categories",
+     0.4122
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3894
+    ],
+    [
+     "rule:province-names",
+     0.3707
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex42",
+     0.6553
+    ],
+    [
+     "ex36",
+     0.652
+    ],
+    [
+     "ex34",
+     0.6297
+    ],
+    [
+     "ex17",
+     0.6127
+    ],
+    [
+     "ex32",
+     0.5942
+    ]
+   ]
+  },
+  {
+   "id": "q25",
+   "lang": "th",
+   "difficulty": "hard",
+   "gold_tables": [
+    "orders",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:dates-and-time-periods",
+     0.4853
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.476
+    ],
+    [
+     "table:orders",
+     0.3914
+    ],
+    [
+     "table:customers",
+     0.3796
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3593
+    ],
+    [
+     "table:order_items",
+     0.3581
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3524
+    ],
+    [
+     "table:products",
+     0.3501
+    ],
+    [
+     "table:reviews",
+     0.3288
+    ],
+    [
+     "table:coupons",
+     0.3249
+    ],
+    [
+     "table:payments",
+     0.3229
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3215
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3025
+    ],
+    [
+     "table:categories",
+     0.294
+    ],
+    [
+     "rule:province-names",
+     0.276
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex34",
+     0.7045
+    ],
+    [
+     "ex42",
+     0.6867
+    ],
+    [
+     "ex41",
+     0.681
+    ],
+    [
+     "ex16",
+     0.6649
+    ],
+    [
+     "ex25",
+     0.6596
+    ]
+   ]
+  },
+  {
+   "id": "q26",
+   "lang": "en",
+   "difficulty": "hard",
+   "gold_tables": [
+    "orders",
+    "customers",
+    "order_items",
+    "products",
+    "categories"
+   ],
+   "mixed_ranking": [
+    [
+     "table:categories",
+     0.4744
+    ],
+    [
+     "table:products",
+     0.4682
+    ],
+    [
+     "table:customers",
+     0.4098
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4089
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3804
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.3747
+    ],
+    [
+     "table:reviews",
+     0.3438
+    ],
+    [
+     "rule:province-names",
+     0.3323
+    ],
+    [
+     "table:orders",
+     0.3316
+    ],
+    [
+     "table:coupons",
+     0.3313
+    ],
+    [
+     "table:order_items",
+     0.3244
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3183
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3025
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.2967
+    ],
+    [
+     "table:payments",
+     0.2729
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex37",
+     0.6681
+    ],
+    [
+     "ex35",
+     0.6344
+    ],
+    [
+     "ex36",
+     0.6089
+    ],
+    [
+     "ex39",
+     0.5562
+    ],
+    [
+     "ex17",
+     0.5519
+    ]
+   ]
+  },
+  {
+   "id": "q27",
+   "lang": "th",
+   "difficulty": "hard",
+   "gold_tables": [
+    "orders",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:sales-revenue-definition",
+     0.5016
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.4526
+    ],
+    [
+     "table:orders",
+     0.4101
+    ],
+    [
+     "table:products",
+     0.407
+    ],
+    [
+     "table:customers",
+     0.3865
+    ],
+    [
+     "table:order_items",
+     0.379
+    ],
+    [
+     "table:reviews",
+     0.3616
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3462
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3354
+    ],
+    [
+     "table:payments",
+     0.3352
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.3335
+    ],
+    [
+     "table:coupons",
+     0.3322
+    ],
+    [
+     "table:categories",
+     0.3299
+    ],
+    [
+     "rule:province-names",
+     0.3231
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.3174
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex42",
+     0.8122
+    ],
+    [
+     "ex16",
+     0.7776
+    ],
+    [
+     "ex25",
+     0.7695
+    ],
+    [
+     "ex41",
+     0.7501
+    ],
+    [
+     "ex32",
+     0.7061
+    ]
+   ]
+  },
+  {
+   "id": "q28",
+   "lang": "en",
+   "difficulty": "hard",
+   "gold_tables": [
+    "orders",
+    "customers",
+    "order_items",
+    "products",
+    "categories"
+   ],
+   "mixed_ranking": [
+    [
+     "table:products",
+     0.4406
+    ],
+    [
+     "table:categories",
+     0.4335
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.3739
+    ],
+    [
+     "table:order_items",
+     0.3685
+    ],
+    [
+     "table:coupons",
+     0.3551
+    ],
+    [
+     "table:orders",
+     0.3374
+    ],
+    [
+     "table:customers",
+     0.3345
+    ],
+    [
+     "table:reviews",
+     0.3248
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3116
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.3039
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.2869
+    ],
+    [
+     "table:payments",
+     0.2862
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.2759
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.2727
+    ],
+    [
+     "rule:province-names",
+     0.2402
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex28",
+     0.5097
+    ],
+    [
+     "ex37",
+     0.4917
+    ],
+    [
+     "ex38",
+     0.4897
+    ],
+    [
+     "ex24",
+     0.4884
+    ],
+    [
+     "ex05",
+     0.4854
+    ]
+   ]
+  },
+  {
+   "id": "q29",
+   "lang": "th",
+   "difficulty": "hard",
+   "gold_tables": [
+    "orders",
+    "order_items"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:dates-and-time-periods",
+     0.498
+    ],
+    [
+     "rule:sales-revenue-definition",
+     0.4789
+    ],
+    [
+     "table:orders",
+     0.4775
+    ],
+    [
+     "table:customers",
+     0.4694
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.4356
+    ],
+    [
+     "table:reviews",
+     0.4338
+    ],
+    [
+     "rule:duplicate-customers",
+     0.4141
+    ],
+    [
+     "table:products",
+     0.4122
+    ],
+    [
+     "table:payments",
+     0.407
+    ],
+    [
+     "table:order_items",
+     0.406
+    ],
+    [
+     "table:coupons",
+     0.4051
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.39
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.377
+    ],
+    [
+     "table:categories",
+     0.3637
+    ],
+    [
+     "rule:province-names",
+     0.3286
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex34",
+     0.6374
+    ],
+    [
+     "ex17",
+     0.6172
+    ],
+    [
+     "ex30",
+     0.5893
+    ],
+    [
+     "ex36",
+     0.5566
+    ],
+    [
+     "ex29",
+     0.5319
+    ]
+   ]
+  },
+  {
+   "id": "q30",
+   "lang": "en",
+   "difficulty": "hard",
+   "gold_tables": [
+    "orders",
+    "order_items",
+    "products"
+   ],
+   "mixed_ranking": [
+    [
+     "rule:sales-revenue-definition",
+     0.4169
+    ],
+    [
+     "table:products",
+     0.4061
+    ],
+    [
+     "table:customers",
+     0.3832
+    ],
+    [
+     "table:orders",
+     0.3489
+    ],
+    [
+     "table:order_items",
+     0.3399
+    ],
+    [
+     "table:payments",
+     0.3372
+    ],
+    [
+     "table:reviews",
+     0.3247
+    ],
+    [
+     "table:categories",
+     0.3166
+    ],
+    [
+     "rule:dates-and-time-periods",
+     0.3153
+    ],
+    [
+     "rule:duplicate-customers",
+     0.3149
+    ],
+    [
+     "table:coupons",
+     0.3138
+    ],
+    [
+     "rule:province-names",
+     0.3044
+    ],
+    [
+     "rule:multiple-payments-per-order",
+     0.2989
+    ],
+    [
+     "rule:cancelled-and-refunded-orders",
+     0.2697
+    ],
+    [
+     "rule:null-timestamps-and-missing-categories",
+     0.234
+    ]
+   ],
+   "top_examples": [
+    [
+     "ex05",
+     0.633
+    ],
+    [
+     "ex35",
+     0.5801
+    ],
+    [
+     "ex31",
+     0.5351
+    ],
+    [
+     "ex20",
+     0.5218
+    ],
+    [
+     "ex24",
+     0.5092
+    ]
+   ]
+  }
+ ]
+}

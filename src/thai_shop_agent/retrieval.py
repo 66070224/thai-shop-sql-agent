@@ -8,7 +8,9 @@ The index (data/index.json) stores every chunk with its bge-m3 vector plus the s
 sources, so a stale index is detected instead of silently used. Similarity is plain-Python cosine.
 
 Prompt context (default): the relationships chunk always; tables and rules ranked together from
-the same index; DDL only for the tables whose chunk was retrieved.
+the same index; DDL for the tables whose chunk was retrieved plus the tables a retrieved rule names
+(rule chunks carry those in ``tables``; chosen from eval/results/retrieval_20261023-111756.json:
+recall@3 0.742 -> 0.956). B2 and the agent add the top-k examples as question -> SQL pairs.
 """
 
 import hashlib
@@ -20,9 +22,10 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Protocol
 
-from thai_shop_agent.config import EMBED_MODEL, EXAMPLES, INDEX_PATH, SCHEMA_DOCS
+from thai_shop_agent.config import EMBED_MODEL, EXAMPLES, INDEX_PATH, SCHEMA_DOCS, TABLES
 
 SCHEMA_KINDS = ("table", "rule")  # what search_schema ranks; relationships is always included
+INDEX_VERSION = 2  # bump when chunking or chunk metadata changes, so an old index is rebuilt
 
 
 class EmbedderLike(Protocol):
@@ -36,7 +39,7 @@ class Chunk:
     text: str
     table: str | None = None
     sql: str | None = None
-    tables: tuple[str, ...] = field(default_factory=tuple)
+    tables: tuple[str, ...] = field(default_factory=tuple)  # rule: tables it names; example: tables its SQL uses
 
 
 @dataclass(frozen=True)
@@ -53,6 +56,11 @@ def _slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
 
+def tables_named(text: str) -> tuple[str, ...]:
+    """Tables mentioned by name in a text, in config.TABLES order."""
+    return tuple(t for t in TABLES if re.search(rf"\b{t}\b", text))
+
+
 def schema_chunks(markdown: str) -> list[Chunk]:
     """Split schema_docs.md at ``## `` headings; text before the first heading is not a chunk."""
     chunks = []
@@ -64,7 +72,7 @@ def schema_chunks(markdown: str) -> list[Chunk]:
         elif heading.startswith("Relationships"):
             chunks.append(Chunk(id="relationships", kind="relationships", text=text))
         elif m := re.match(r"Rule:\s*([^(]+)", heading):
-            chunks.append(Chunk(id=f"rule:{_slug(m.group(1))}", kind="rule", text=text))
+            chunks.append(Chunk(id=f"rule:{_slug(m.group(1))}", kind="rule", text=text, tables=tables_named(text)))
         else:
             raise ValueError(f"schema_docs.md heading {heading!r} is not Table:, Rule: or Relationships")
     return chunks
@@ -102,6 +110,7 @@ def build_index(embedder: EmbedderLike, chunks: list[Chunk], sources: dict[str, 
     if len(vectors) != len(chunks):
         raise RuntimeError(f"got {len(vectors)} vectors for {len(chunks)} chunks")
     index = {
+        "version": INDEX_VERSION,
         "model": model,
         "dim": len(vectors[0]) if vectors else 0,
         "sources": sources,
@@ -124,7 +133,7 @@ class Retriever:
             raise FileNotFoundError(f"{path} not found; run: uv run --env-file .env scripts/build_index.py")
         index = json.loads(path.read_text(encoding="utf-8"))
         expected = source_hashes() if expected_sources is None else expected_sources
-        if index["sources"] != expected:
+        if index.get("version") != INDEX_VERSION or index["sources"] != expected:
             raise StaleIndexError(f"{path.name} was built from different schema docs / examples; "
                                   "rebuild it with scripts/build_index.py")
         self.embedder = embedder
@@ -167,10 +176,14 @@ class SchemaContext:
 
 
 def build_schema_context(retriever: Retriever, vector: Sequence[float], k: int, min_score: float,
-                         ddl: dict[str, str]) -> SchemaContext:
-    """Relationships + top-k table/rule chunks + DDL of the retrieved tables only."""
+                         ddl: dict[str, str], rule_tables: bool = True) -> SchemaContext:
+    """Relationships + top-k table/rule chunks + DDL of the retrieved tables (and, with
+    ``rule_tables``, of the tables the retrieved rules name)."""
     hits = retriever.search_vector(vector, k, min_score, kind=SCHEMA_KINDS)
     tables = [h.chunk.table for h in hits if h.chunk.kind == "table"]
+    if rule_tables:
+        tables += [t for h in hits if h.chunk.kind == "rule" for t in h.chunk.tables]
+    tables = list(dict.fromkeys(tables))  # dedupe, keep rank order
     relationships = retriever.by_kind("relationships")
     ddl_text = "\n\n".join(ddl[t] for t in tables if t in ddl) or "(no table retrieved)"
     docs = "\n\n".join([c.text for c in relationships] + [h.chunk.text for h in hits])
@@ -178,3 +191,29 @@ def build_schema_context(retriever: Retriever, vector: Sequence[float], k: int, 
             f"## Schema documentation and business rules\n\n{docs}")
     return SchemaContext(text=text, hits=hits, tables=tables,
                          chunk_ids=[c.id for c in relationships] + [h.chunk.id for h in hits])
+
+
+@dataclass
+class PromptContext:
+    text: str  # schema section, then the examples section when there are examples
+    schema: SchemaContext
+    examples: list[Hit]
+
+    @property
+    def chunk_ids(self) -> list[str]:
+        return self.schema.chunk_ids + [h.chunk.id for h in self.examples]
+
+
+def format_examples(hits: list[Hit]) -> str:
+    pairs = "\n\n".join(f"Question: {h.chunk.text}\nSQL: {h.chunk.sql}" for h in hits)
+    return f"## Similar questions with their correct SQL\n\n{pairs}"
+
+
+def build_prompt_context(retriever: Retriever, question: str, k_schema: int, k_examples: int, min_score: float,
+                         ddl: dict[str, str], rule_tables: bool = True) -> PromptContext:
+    """The context B1 (k_examples = 0), B2 and the agent start from; the question is embedded once."""
+    vector = retriever.embed_query(question)
+    schema = build_schema_context(retriever, vector, k_schema, min_score, ddl, rule_tables)
+    examples = retriever.search_vector(vector, k_examples, min_score, kind="example") if k_examples else []
+    text = schema.text + (f"\n\n{format_examples(examples)}" if examples else "")
+    return PromptContext(text=text, schema=schema, examples=examples)

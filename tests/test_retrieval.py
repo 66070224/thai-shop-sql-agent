@@ -4,7 +4,8 @@ import pytest
 
 from thai_shop_agent.config import SCHEMA_DOCS
 from thai_shop_agent.llm import Embedder
-from thai_shop_agent.retrieval import (Chunk, Retriever, StaleIndexError, build_index, build_schema_context, cosine,
+from thai_shop_agent.retrieval import (Chunk, Retriever, StaleIndexError, build_index, build_prompt_context,
+                                       build_schema_context, cosine,
                                        example_chunks, schema_chunks)
 
 VOCAB = ["orders", "customers", "sales", "province", "payment", "review"]
@@ -115,3 +116,39 @@ def test_schema_context_has_relationships_and_only_retrieved_ddl(retriever):
     assert "CREATE TABLE customers" in ctx.text and "CREATE TABLE orders" not in ctx.text
     assert "## Relationships" in ctx.text
     assert ctx.chunk_ids == ["relationships", "table:customers"]
+
+
+def test_rule_chunks_name_their_tables():
+    rules = {c.id: c.tables for c in schema_chunks(SCHEMA_DOCS.read_text(encoding="utf-8")) if c.kind == "rule"}
+    assert rules["rule:sales-revenue-definition"] == ("orders", "order_items", "products")
+    assert rules["rule:province-names"] == ("customers",)
+
+
+def test_schema_context_adds_ddl_of_tables_named_by_retrieved_rules(tmp_path):
+    chunks = CHUNKS[:4] + [Chunk(id="rule:sales", kind="rule", text="sales sales sales", tables=("orders", "payments"))]
+    path = tmp_path / "index.json"
+    build_index(FakeEmbedder(), chunks, SOURCES, path=path)
+    r = Retriever(FakeEmbedder(), path=path, expected_sources=SOURCES)
+    ddl = {t: f"CREATE TABLE {t} (...);" for t in ("orders", "customers", "payments")}
+    vec = r.embed_query("sales")
+    assert build_schema_context(r, vec, k=1, min_score=0.0, ddl=ddl).tables == ["orders", "payments"]
+    assert build_schema_context(r, vec, k=1, min_score=0.0, ddl=ddl, rule_tables=False).tables == []
+
+
+def test_prompt_context_appends_examples(retriever):
+    ctx = build_prompt_context(retriever, "customers province", k_schema=1, k_examples=1, min_score=0.0, ddl={})
+    assert ctx.text.endswith("Question: province customers\nSQL: SELECT 1")
+    assert ctx.chunk_ids == ["relationships", "table:customers", "ex01"]
+    no_examples = build_prompt_context(retriever, "customers province", k_schema=1, k_examples=0, min_score=0.0,
+                                       ddl={})
+    assert no_examples.examples == [] and "Similar questions" not in no_examples.text
+
+
+def test_old_index_version_is_refused(tmp_path):
+    import json
+    path = tmp_path / "index.json"
+    build_index(FakeEmbedder(), CHUNKS, SOURCES, path=path)
+    index = json.loads(path.read_text(encoding="utf-8"))
+    path.write_text(json.dumps({**index, "version": 1}), encoding="utf-8")
+    with pytest.raises(StaleIndexError):
+        Retriever(FakeEmbedder(), path=path, expected_sources=SOURCES)

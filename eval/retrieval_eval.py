@@ -2,19 +2,18 @@
 
     uv run --env-file .env eval/retrieval_eval.py
 
-recall of one question = |gold tables ∩ tables of the retrieved table chunks| / |gold tables|.
+recall of one question = |gold tables ∩ tables whose DDL the prompt would get| / |gold tables|.
 Measured for k = 1..8 and several min_score levels, overall and by lang / difficulty, in three modes:
-  mixed       tables and rules ranked together (the default prompt assembly; rules use up slots)
-  table_only  only table chunks ranked
-  mixed_rule_tables  same ranking as mixed, but a retrieved rule chunk also counts the tables its
-              text names (measures the alternative "add DDL for tables named in retrieved rules")
+  mixed_rule_tables  tables and rules ranked together; a retrieved table chunk and the tables a
+                     retrieved rule names both count (the prompt assembly in use)
+  mixed              same ranking, only table chunks count (the earlier default, kept for comparison)
+  table_only         only table chunks ranked
 Also records how many slots rules took, and each question's ranked list, so the k / min_score
 choice in eval/sweep.py can be checked against these numbers.
 Output: eval/results/retrieval_<timestamp>.json
 """
 
 import json
-import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -26,19 +25,14 @@ from validate_testset import load as load_testset
 RESULTS_DIR = Path(__file__).resolve().parent / "results"
 KS = list(range(1, 9))
 MIN_SCORES = [0.0, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6]
-MODES = {"mixed": SCHEMA_KINDS, "table_only": "table", "mixed_rule_tables": SCHEMA_KINDS}
-TABLES = ["orders", "order_items", "products", "categories", "customers", "payments", "reviews", "coupons"]
+MODES = {"mixed_rule_tables": SCHEMA_KINDS, "mixed": SCHEMA_KINDS, "table_only": "table"}
 GROUPS = (("difficulty", ["easy", "medium", "hard"]), ("lang", ["th", "en"]))
-
-
-def tables_named(text: str) -> set[str]:
-    return {t for t in TABLES if re.search(rf"\b{t}\b", text)}
 
 
 def recall(gold_tables: list[str], hits: list[Hit], rule_tables: bool = False) -> float:
     got = {h.chunk.table for h in hits if h.chunk.kind == "table"}
     if rule_tables:
-        got |= {t for h in hits if h.chunk.kind == "rule" for t in tables_named(h.chunk.text)}
+        got |= {t for h in hits if h.chunk.kind == "rule" for t in h.chunk.tables}
     return len(set(gold_tables) & got) / len(gold_tables)
 
 
@@ -96,8 +90,8 @@ def main() -> int:
         print(f"{'min_score':>9}" + "".join(f"{k:>7}" for k in KS))
         for ms, per_k in out["modes"][mode].items():
             print(f"{ms:>9}" + "".join(f"{per_k[str(k)]['overall']:>7.3f}" for k in KS))
-    print("\n[mixed, min_score 0.0] by group at k = 3 / 5 / 8; avg rule chunks in top k")
-    grid = out["modes"]["mixed"]["0.0"]
+    print("\n[mixed_rule_tables, min_score 0.0] by group at k = 3 / 5 / 8; avg rule chunks in top k")
+    grid = out["modes"]["mixed_rule_tables"]["0.0"]
     for g in ["overall"] + [f"{key}={v}" for key, values in GROUPS for v in values]:
         print(f"  {g:<18}" + "".join(f"{grid[str(k)][g]:>8.3f}" for k in (3, 5, 8)))
     print(f"  {'avg_rule_chunks':<18}" + "".join(f"{grid[str(k)]['avg_rule_chunks']:>8.2f}" for k in (3, 5, 8)))

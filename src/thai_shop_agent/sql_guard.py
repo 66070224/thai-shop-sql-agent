@@ -19,9 +19,9 @@ from sqlglot import exp
 from sqlglot.errors import SqlglotError
 from sqlglot.tokens import Token, TokenType
 
-ALLOWED_TABLES = frozenset({
-    "categories", "coupons", "customers", "order_items", "orders", "payments", "products", "reviews",
-})
+from thai_shop_agent.config import TABLES
+
+ALLOWED_TABLES = frozenset(TABLES)
 DENYLIST = frozenset({
     "INSERT", "UPDATE", "DELETE", "DROP", "ALTER", "CREATE", "ATTACH", "DETACH", "PRAGMA", "VACUUM", "REPLACE",
 })

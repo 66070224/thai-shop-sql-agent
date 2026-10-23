@@ -8,6 +8,8 @@ SCHEMA_DOCS = DATA_DIR / "schema_docs.md"
 EXAMPLES = DATA_DIR / "examples.jsonl"
 INDEX_PATH = DATA_DIR / "index.json"  # built by scripts/build_index.py, not committed
 
+TABLES = ("orders", "order_items", "products", "categories", "customers", "payments", "reviews", "coupons")
+
 MODEL = "gemma-4-E4B-it"
 EMBED_MODEL = "bge-m3"
 EMBED_BATCH = 32
