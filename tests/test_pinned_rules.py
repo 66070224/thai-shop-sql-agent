@@ -99,7 +99,8 @@ def test_run_pin_rules_flag_sets_pinned_rules(config):
     ns = lambda pin: argparse.Namespace(config=config, k_schema=None, k_examples=None, min_score=None,  # noqa: E731
                                         no_rule_tables=False, pin_rules=pin)
     assert run.retrieval_params(ap, ns(True)).pinned_rules == PINNED_RULES
-    assert run.retrieval_params(ap, ns(False)).pinned_rules == DEFAULT_RETRIEVAL.pinned_rules
+    assert run.retrieval_params(ap, ns(False)).pinned_rules == ()
+    assert run.retrieval_params(ap, ns(None)).pinned_rules == DEFAULT_RETRIEVAL.pinned_rules
 
 
 def test_compare_treats_missing_pinned_rules_as_none_and_separates_pinned_runs():

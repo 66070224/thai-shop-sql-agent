@@ -6,7 +6,7 @@ is the model's query, ``exec_sql`` what was actually run.
 
     uv run --env-file .env eval/run.py --config b0      # b1 | b2 | full
     uv run --env-file .env eval/run.py --config b2 --k-schema 3 --k-examples 3 --min-score 0.0   # override
-    uv run --env-file .env eval/run.py --config full --pin-rules   # config.PINNED_RULES in every prompt
+    uv run --env-file .env eval/run.py --config full --pin-rules   # config.PINNED_RULES in every prompt (--no-pin-rules: none)
 
 Adding a config (b1, b2, full) = adding a factory to CONFIGS that takes (conn, retrieval params)
 and returns an object with ``predict(question) -> Prediction``; the scoring and reporting below
@@ -162,7 +162,7 @@ def retrieval_params(ap: argparse.ArgumentParser, args: argparse.Namespace) -> R
     if args.config == "b2" and k_examples < 1:
         ap.error("--config b2 needs --k-examples >= 1 (k_examples = 0 is b1)")
     # full starts from the B2 context; --k-examples 0 is allowed there (the sweep may pick it)
-    pinned = PINNED_RULES if args.pin_rules else d.pinned_rules
+    pinned = d.pinned_rules if args.pin_rules is None else (PINNED_RULES if args.pin_rules else ())
     return RetrievalParams(k_schema=k_schema, k_examples=k_examples, min_score=min_score,
                            rule_tables=not args.no_rule_tables, pinned_rules=pinned)
 
@@ -177,8 +177,9 @@ def main() -> int:
     ap.add_argument("--k-examples", type=int, help="examples to retrieve (b2, full; b1 is always 0)")
     ap.add_argument("--min-score", type=float, help="cosine threshold for retrieval (b1, b2)")
     ap.add_argument("--no-rule-tables", action="store_true", help="only DDL of retrieved table chunks")
-    ap.add_argument("--pin-rules", action="store_true",
-                    help=f"put {', '.join(PINNED_RULES)} in every starting prompt (b1, b2, full)")
+    ap.add_argument("--pin-rules", action=argparse.BooleanOptionalAction,
+                    help=f"put {', '.join(PINNED_RULES)} in every starting prompt (b1, b2, full); "
+                         "default: config.DEFAULT_RETRIEVAL.pinned_rules")
     args = ap.parse_args()
     params = retrieval_params(ap, args)
 
