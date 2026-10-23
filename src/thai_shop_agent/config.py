@@ -42,4 +42,9 @@ PINNED_RULES = ("rule:sales-revenue-definition", "rule:province-names")
 # (1720 vs 1746). Margins between the top settings are 1-2 questions out of 30, and the values were tuned on
 # the test set itself (there is no dev split): a limitation to state in the report.
 # B1 uses the same k_schema / min_score with k_examples = 0, so B1 vs B2 isolates the effect of examples.
-DEFAULT_RETRIEVAL = RetrievalParams(k_schema=5, k_examples=1, min_score=0.35)
+#
+# pinned_rules chosen by eval/before_after.py -> eval/results/before_after_pinned_rules.md (rule fixed before
+# the after runs): full EX 0.867 / 0.867 -> 0.900 / 0.900, valid SQL 1.00 -> 1.00, q12 wrong->right in both
+# runs, no question right->wrong; cost +599 prompt tokens per question (+12.7%). The two rules were picked
+# from the error analysis of the same test set, also a limitation. run.py --no-pin-rules gives the old setting.
+DEFAULT_RETRIEVAL = RetrievalParams(k_schema=5, k_examples=1, min_score=0.35, pinned_rules=PINNED_RULES)

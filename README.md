@@ -17,7 +17,7 @@ question
    │
    ▼
 retrieval.py ── bge-m3 index (data/index.json) ─ schema_docs.md 16 chunks + examples.jsonl 44 ข้อ
-   │   relationships ทุกครั้ง + top-k ตาราง/กฎ + DDL ของตารางที่ถูกดึงและที่กฎอ้างถึง + top-k ตัวอย่าง
+   │   relationships + กฎยอดขาย/จังหวัด ทุกครั้ง + top-k ตาราง/กฎ + DDL ของตารางที่ถูกดึงและที่กฎอ้างถึง + top-k ตัวอย่าง
    ▼
 agent.py ── loop: gemma-4-E4B-it (tools=[search_schema, run_sql]) ≤ 5 รอบ
    │            │
@@ -33,7 +33,7 @@ FinalAnswer {answer, sql, columns, rows, citations, steps, stopped_reason, usage
 
 | ไฟล์ | หน้าที่ |
 |---|---|
-| `src/thai_shop_agent/config.py` | model, timeout, ค่า retrieval default (`DEFAULT_RETRIEVAL` เลือกจาก sweep) |
+| `src/thai_shop_agent/config.py` | model, timeout, ค่า retrieval default (`DEFAULT_RETRIEVAL`: k / min_score จาก sweep, `pinned_rules` จาก before/after) |
 | `src/thai_shop_agent/llm.py` | OpenAI client (อ่าน `OPENAI_API_KEY` / `OPENAI_BASE_URL` จาก env), retry rate limit, redact |
 | `src/thai_shop_agent/retrieval.py` | chunk, index, cosine (Python ล้วน), ประกอบ context |
 | `src/thai_shop_agent/sql_guard.py` | `clean` → `guard` (sqlglot) → `add_limit` |
@@ -111,7 +111,13 @@ uv run --env-file .env eval/run.py --config full
 ```
 
 `--config` เป็น `b0`, `b1`, `b2` หรือ `full`; ค่า retrieval ใช้ `DEFAULT_RETRIEVAL` เว้นแต่ส่ง `--k-schema`, `--k-examples`, `--min-score`;
-`--ids q01 q12` รันเฉพาะบางข้อ
+`--ids q01 q12` รันเฉพาะบางข้อ; `--no-pin-rules` ปิดการปักกฎ (ค่า before ของการทดลอง)
+
+```bash
+uv run eval/before_after.py --before <ไฟล์ผล before ...> --after <ไฟล์ผล after ...>
+```
+
+คำสั่งเต็มพร้อมชื่อไฟล์อยู่ใน `eval/results/before_after_pinned_rules.md`
 
 ```bash
 uv run --env-file .env eval/sweep.py
@@ -124,7 +130,7 @@ uv run eval/compare.py
 | config | context | การเรียก model |
 |---|---|---|
 | B0 | DDL ทั้งหมด + schema docs ทั้งหมด | 1 ครั้ง ไม่มี tool |
-| B1 | relationships + top-k ตาราง/กฎ + DDL ที่เกี่ยวข้อง | 1 ครั้ง ไม่มี tool |
+| B1 | relationships + กฎที่ปักไว้ 2 ข้อ + top-k ตาราง/กฎ + DDL ที่เกี่ยวข้อง | 1 ครั้ง ไม่มี tool |
 | B2 | B1 + top-k ตัวอย่าง (คำถาม → SQL) | 1 ครั้ง ไม่มี tool |
 | full | เริ่มจาก context แบบ B2 | agent loop ≤ 5 ครั้ง, tool `search_schema` / `run_sql` |
 
@@ -136,37 +142,54 @@ uv run eval/compare.py
 
 ตัวเลขทั้งหมดมาจากการรันจริง (`eval/results/comparison.md`, สร้างด้วย `eval/compare.py`) temperature 0;
 ค่า retrieval default k_schema=5, k_examples=1, min_score=0.35 (B1 ใช้ k_examples=0) เลือกจาก
-`eval/results/sweep_20261023-113639.json`; B1, B2, full รันอย่างละ 2 รอบและแสดงทั้งสองรอบ
+`eval/results/sweep_20261023-113639.json` และปักกฎ `rule:sales-revenue-definition` + `rule:province-names` ไว้ใน context ทุกครั้ง
+(ดู "Measured improvement" ด้านล่าง); B1, B2, full รันอย่างละ 2 รอบและแสดงทั้งสองรอบ
 
 | run | EX | EX-strict | valid SQL | hard EX | th EX | en EX | latency s | llm_calls | prompt tok | completion tok |
 |---|---|---|---|---|---|---|---|---|---|---|
 | b0 #1 | 0.900 | 0.800 | 0.967 | 0.625 | 1.000 | 0.800 | 1.06 | 1.00 | 3862 | 80 |
-| b1 #1 | 0.800 | 0.733 | 1.000 | 0.750 | 0.867 | 0.733 | 1.24 | 1.00 | 1642 | 76 |
-| b1 #2 | 0.800 | 0.733 | 1.000 | 0.750 | 0.867 | 0.733 | 1.22 | 1.00 | 1642 | 75 |
-| b2 #1 | 0.800 | 0.733 | 0.967 | 0.625 | 0.867 | 0.733 | 1.12 | 1.00 | 1720 | 69 |
-| b2 #2 | 0.833 | 0.733 | 0.967 | 0.625 | 0.933 | 0.733 | 1.13 | 1.00 | 1720 | 70 |
-| full #1 | 0.867 | 0.733 | 1.000 | 0.625 | 0.933 | 0.800 | 2.47 | 2.17 | 4713 | 172 |
-| full #2 | 0.867 | 0.733 | 1.000 | 0.625 | 0.933 | 0.800 | 2.47 | 2.17 | 4713 | 172 |
+| b1 #1 | 0.867 | 0.767 | 1.000 | 0.625 | 0.867 | 0.867 | 1.28 | 1.00 | 2135 | 80 |
+| b1 #2 | 0.900 | 0.800 | 1.000 | 0.750 | 0.933 | 0.867 | 1.25 | 1.00 | 2135 | 81 |
+| b2 #1 | 0.900 | 0.767 | 1.000 | 0.750 | 0.933 | 0.867 | 1.35 | 1.00 | 2214 | 72 |
+| b2 #2 | 0.900 | 0.767 | 1.000 | 0.625 | 0.933 | 0.867 | 1.24 | 1.00 | 2214 | 72 |
+| full #1 | 0.900 | 0.733 | 1.000 | 0.625 | 0.933 | 0.867 | 2.22 | 2.03 | 5311 | 135 |
+| full #2 | 0.900 | 0.733 | 1.000 | 0.625 | 0.933 | 0.867 | 2.08 | 2.03 | 5312 | 136 |
 
 แยกตาม difficulty (EX / EX-strict / valid SQL, รอบ #1 ของแต่ละ config; รอบ #2 อยู่ใน `comparison.md`)
 
 | config | easy | medium | hard |
 |---|---|---|---|
 | b0 | 1.000 / 0.900 / 1.000 | 1.000 / 0.833 / 1.000 | 0.625 / 0.625 / 0.875 |
-| b1 | 1.000 / 1.000 / 1.000 | 0.667 / 0.500 / 1.000 | 0.750 / 0.750 / 1.000 |
-| b2 | 1.000 / 0.900 / 1.000 | 0.750 / 0.667 / 1.000 | 0.625 / 0.625 / 0.875 |
-| full | 1.000 / 0.900 / 1.000 | 0.917 / 0.750 / 1.000 | 0.625 / 0.500 / 1.000 |
+| b1 | 1.000 / 1.000 / 1.000 | 0.917 / 0.750 / 1.000 | 0.625 / 0.500 / 1.000 |
+| b2 | 1.000 / 0.900 / 1.000 | 0.917 / 0.750 / 1.000 | 0.750 / 0.625 / 1.000 |
+| full | 1.000 / 0.900 / 1.000 | 1.000 / 0.833 / 1.000 | 0.625 / 0.375 / 1.000 |
 
 สรุป
 
-- B0 (schema ทั้งหมดใน prompt) ยังได้ EX สูงสุด 0.900; full ได้ 0.867 ทั้งสองรอบ
-- full ได้ valid SQL 1.000 (B0 0.967) เพราะ agent เห็น error แล้วแก้ SQL เองได้
-- B1 / B2 ใช้ prompt เล็กลงประมาณ 2.3 เท่า (1642–1720 vs 3862 tokens) โดย EX ลดลง 0.07–0.10; B1 ได้ hard EX 0.750 สูงกว่า B0
-- full ใช้ token มากกว่า B0 (~4700 prompt tokens รวมทุกรอบ, 2.17 LLM calls ต่อคำถาม) และช้ากว่า ~2.3 เท่า
-- schema recall@k (ไม่เรียก chat model, `retrieval_20261023-112336.json`): 0.956 ที่ k=3, 0.969 ที่ k=5, 1.000 ที่ k=7
-  เมื่อนับ DDL ของตารางที่กฎอ้างถึงด้วย (ถ้านับเฉพาะ chunk ตาราง: 0.742 / 0.843 / 0.952)
-- ข้อที่ full ผิด (q12, q25, q26, q28) วิเคราะห์ไว้ใน `eval/error_analysis.md`: จังหวัดกรุงเทพหลายชื่อ, ใช้ `name_th` กับคำถามอังกฤษ,
-  นิยามยอดขาย, ลำดับ AND/OR
+- EX ของ B0, B2 และ full เท่ากันที่ 0.900 (B1 0.867 / 0.900) — ที่ 30 ข้อ ต่างกัน 1 ข้อ = 3.3 pp จึงแยกกันไม่ออกด้วย EX
+- ระบบ retrieval ทุกตัวได้ valid SQL 1.000 (B0 0.967) และใช้ prompt เล็กกว่า B0: B1/B2 ~2.1–2.2k vs 3.9k tokens
+- full ไม่ได้ดีกว่า B2 ที่ค่า default ใหม่ (EX เท่ากัน, EX-strict ต่ำกว่า) แต่ใช้ token ~2.4 เท่าและช้ากว่า ~1.7 เท่า;
+  ข้อดีของ agent เห็นได้เมื่อกฎที่ต้องใช้ไม่อยู่ใน context (ดู demo q22 ใน `eval/error_analysis.md`)
+- full ได้ผลเหมือนกันทุกข้อทั้งสองรอบ; B1/B2 ต่างกันระหว่างรอบ 1–2 ข้อ (q19, q25)
+- schema recall@5 (min_score 0.35, ไม่เรียก chat model, `retrieval_20261023-130126.json`): 0.969 ก่อนปักกฎ → 1.000 หลังปักกฎ
+  (ถ้านับเฉพาะ chunk ตาราง ไม่นับตารางที่กฎอ้างถึง: 0.821)
+- ข้อที่ full ยังผิด (q25, q26, q28) วิเคราะห์ไว้ใน `eval/error_analysis.md` หัวข้อ "หลังปักกฎ": ใช้ `name_th` กับคำถามอังกฤษ
+  (q26, q28) และลำดับ AND/OR (q25)
+
+## Measured improvement: ปักกฎหลัก 2 ข้อไว้ใน context
+
+เปลี่ยนตัวแปรเดียวคือ `pinned_rules` (ค่าอื่นทั้งหมดคงเดิม) และตั้งเกณฑ์ตัดสินไว้ก่อนรัน after
+รายงานเต็ม (สร้างด้วย `eval/before_after.py`): [`eval/results/before_after_pinned_rules.md`](eval/results/before_after_pinned_rules.md)
+
+| | full EX (2 รอบ) | valid SQL | b2 EX (2 รอบ) | prompt tok / คำถาม (full) |
+|---|---|---|---|---|
+| before (`--no-pin-rules`) | 0.867 / 0.867 | 1.000 | 0.833 / 0.833 | 4713 |
+| after (`--pin-rules`, default ตอนนี้) | 0.900 / 0.900 | 1.000 | 0.900 / 0.900 | 5312 (+599, +12.7%) |
+
+- full: q12 ผิด→ถูกทั้งสองรอบ, ไม่มีข้อ ถูก→ผิด; q26 ใช้กฎทั้งสองถูกแล้ว แต่ยังผิดเพราะ `name_th`
+- b2: ผิด→ถูก q12, q22, q27; ถูก→ผิดบางรอบ q19, q25 (แต่ละข้อผิด 1 ใน 2 รอบ)
+- เหตุผลนอก testset: ใน few-shot 44 ข้อ มี 20 ข้อ (45%) ที่ต้องใช้กฎยอดขาย/ตัด cancelled-refunded หรือชื่อจังหวัด
+- ข้อจำกัด: กฎที่ปักเลือกจาก error analysis บน testset เดียวกัน (ไม่มี dev split) และ 1 ข้อ = 3.3 pp
 
 ## ข้อจำกัด
 

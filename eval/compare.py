@@ -77,7 +77,7 @@ def collect(testset_sha: str) -> tuple[list[dict], list[dict]]:
         run = {"summary": s, "records": records, "cost": cost(records), "why": None}
         llm_errors = [r["id"] for r in records if (r["error"] or "").startswith("llm_error")]
         if run_params(s.get("retrieval_params")) != expected_params(s["config"]):
-            run["why"] = f"retrieval params {s.get('retrieval_params')}"
+            run["why"] = f"retrieval params {run_params(s.get('retrieval_params'))}"
         elif llm_errors:  # a proxy failure is not a model answer; the run is listed, not scored with the rest
             run["why"] = f"proxy/LLM error on {', '.join(llm_errors)} (scored as wrong in this run)"
         (other if run["why"] else used).append(run)
