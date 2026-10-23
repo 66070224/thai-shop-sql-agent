@@ -92,6 +92,32 @@ uv run --env-file .env uvicorn thai_shop_agent.api:app --reload
 uv run pytest
 ```
 
+## ตัวอย่างคำถามสำหรับลองบนหน้าเว็บ
+
+คัดจาก testset (`eval/testset.jsonl`) โดยดูผลของ `full` ที่ค่า default ปัจจุบัน 2 รอบ
+(`eval/results/full_20261023-125440.jsonl`, `eval/results/full_20261023-125651.jsonl`) "คำตอบที่ถูก" คือผลของ gold SQL บน `data/shop.db`
+proxy ไม่ deterministic แม้ temperature 0 ผลบนหน้าเว็บจึงอาจต่างจากนี้ได้บ้าง
+
+### Success (ถูกทั้ง 2 รอบ)
+
+| id | คำถาม (พิมพ์ลงช่องได้เลย) | คำตอบที่ถูก | สิ่งที่ข้อนี้ทดสอบ |
+|---|---|---|---|
+| q12 | How many customers do we have in Bangkok? | 1,015 คน | ชื่อจังหวัดไม่สม่ำเสมอ (กรุงเทพ / กทม. / Bangkok) — ผิดก่อนปักกฎ |
+| q13 | ยอดขายรวมของปี 2025 เท่าไหร่ | 38,294,928.77 | นิยามยอดขาย + ตัด cancelled/refunded |
+| q21 | ลูกค้าในกรุงเทพฯ ซื้อของไปรวมเป็นเงินเท่าไหร่ในปี 2025 | 15,764,709.43 | ใช้ทั้งกฎยอดขายและกฎชื่อจังหวัด |
+| q24 | Show total sales for each month of 2025, in month order. | 12 แถว 2025-01 = 3,075,054.99 … 2025-12 = 4,829,510.58 | group by เดือน + เรียงลำดับ |
+| q30 | What was our gross profit in each year? | 2024 = 9,185,515.59, 2025 = 12,914,688.85 | กำไรขั้นต้น (ใช้ `cost` ของสินค้า) |
+
+### Fail (ผิดทั้ง 2 รอบ)
+
+| id | คำถาม | คำตอบที่ถูก | ที่ agent ตอบ | สาเหตุ |
+|---|---|---|---|---|
+| q25 | ยอดขายวัน 11.11 ของปี 2024 และปี 2025 แต่ละปีเท่าไหร่ | 2024 = 758,090.44, 2025 = 680,605.66 | 2024 = 758,090.44, **2025 = 775,757.86** | `... AND date(...) = '2024-11-11' OR date(...) = '2025-11-11'` ไม่ใส่วงเล็บครอบ `OR` ตัว `status` จึงกรองแค่ปี 2024 (ผิดเงียบ: SQL รันได้ ตัวเลขดูสมเหตุสมผล) |
+| q26 | What are the top 3 product categories by sales among Bangkok customers in 2025? | Computers & Laptops, Mobile Phones, Gaming | คอมพิวเตอร์และแล็ปท็อป, โทรศัพท์มือถือ, เกมและอุปกรณ์เกม | ใช้ `name_th` กับคำถามภาษาอังกฤษ (นับเป็นผิดตามกติกา) |
+| q28 | Which product category sells the most units to customers in Khon Kaen? | Food & Beverages | อาหารและเครื่องดื่ม | ใช้ `name_th` กับคำถามภาษาอังกฤษ |
+
+trace ทีละขั้นของ q25 อยู่ใน `eval/error_analysis.md` หัวข้อ "Demo หลังปักกฎ"
+
 ## วิธีรัน eval
 
 ```bash
