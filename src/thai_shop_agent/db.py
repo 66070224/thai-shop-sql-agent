@@ -35,7 +35,13 @@ def run_query(conn: sqlite3.Connection, sql: str, timeout_s: float = 10.0) -> tu
     return cols, rows
 
 
+def table_ddl(conn: sqlite3.Connection) -> dict[str, str]:
+    """{table name: CREATE TABLE statement} from sqlite_master (indexes left out), in creation order."""
+    rows = conn.execute(
+        "SELECT name, sql FROM sqlite_master WHERE type = 'table' AND sql IS NOT NULL ORDER BY rowid")
+    return {name: sql.strip() + ";" for name, sql in rows}
+
+
 def schema_ddl(conn: sqlite3.Connection) -> str:
-    """CREATE TABLE statements from sqlite_master (indexes left out)."""
-    rows = conn.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND sql IS NOT NULL ORDER BY rowid")
-    return "\n\n".join(r[0].strip() + ";" for r in rows)
+    """CREATE TABLE statements for every table."""
+    return "\n\n".join(table_ddl(conn).values())
