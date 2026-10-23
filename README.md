@@ -1,0 +1,183 @@
+# Thai Shop SQL Agent
+
+Agent ที่แปลงคำถามภาษาธรรมชาติ (ไทย/อังกฤษ) เป็น SQL บนฐานข้อมูล SQLite ของร้านค้าออนไลน์ไทย (ข้อมูลสังเคราะห์
+8 ตาราง ม.ค. 2024 – ธ.ค. 2025 ~50k แถว) แล้วรัน SQL แบบอ่านอย่างเดียว ตอบเป็นข้อความพร้อม SQL ผลลัพธ์ และแหล่งอ้างอิง
+Capstone วิชา Special Topic 2 (LLM)
+
+- ดึงเฉพาะ schema / กฎธุรกิจ / ตัวอย่างที่เกี่ยวข้องด้วย embedding (`bge-m3`) แทนการใส่ schema ทั้งหมดใน prompt
+- agent เรียก tool แบบ native (`search_schema`, `run_sql`) กับ `gemma-4-E4B-it` แก้ SQL เองเมื่อ error
+- SQL ทุกคำสั่งจาก model ผ่าน guard (1 statement, SELECT/WITH เท่านั้น, allow-list ตาราง, LIMIT 100) และรันบน connection read-only
+- API stream ขั้นตอนของ agent เป็น Server-Sent Events และมีหน้าเว็บไฟล์เดียวแสดงผลแบบ live
+- eval ใช้ agent ตัวเดียวกับ API และวัดผลเทียบ baseline 3 แบบ
+
+## สถาปัตยกรรม
+
+```
+question
+   │
+   ▼
+retrieval.py ── bge-m3 index (data/index.json) ─ schema_docs.md 16 chunks + examples.jsonl 44 ข้อ
+   │   relationships ทุกครั้ง + top-k ตาราง/กฎ + DDL ของตารางที่ถูกดึงและที่กฎอ้างถึง + top-k ตัวอย่าง
+   ▼
+agent.py ── loop: gemma-4-E4B-it (tools=[search_schema, run_sql]) ≤ 5 รอบ
+   │            │
+   │            └─ tools.py ─ Pydantic validate ─ sql_guard.py ─ db.py (mode=ro, timeout 10 s, ≤ 20 แถวกลับให้ model)
+   ▼
+FinalAnswer {answer, sql, columns, rows, citations, steps, stopped_reason, usage}
+   │
+   ├─ eval/run.py  (อ่าน event สุดท้าย → EX / EX-strict / valid SQL)
+   └─ api.py       (POST /ask → SSE ทุก event) ─ web/index.html
+```
+
+ชั้นของโค้ด (ชั้นล่างไม่ import ชั้นบน): `config` → `db` / `llm` → `retrieval` → `sql_guard` / `tools` → `baseline` / `agent` → `api` → `web`
+
+| ไฟล์ | หน้าที่ |
+|---|---|
+| `src/thai_shop_agent/config.py` | model, timeout, ค่า retrieval default (`DEFAULT_RETRIEVAL` เลือกจาก sweep) |
+| `src/thai_shop_agent/llm.py` | OpenAI client (อ่าน `OPENAI_API_KEY` / `OPENAI_BASE_URL` จาก env), retry rate limit, redact |
+| `src/thai_shop_agent/retrieval.py` | chunk, index, cosine (Python ล้วน), ประกอบ context |
+| `src/thai_shop_agent/sql_guard.py` | `clean` → `guard` (sqlglot) → `add_limit` |
+| `src/thai_shop_agent/tools.py`, `schemas.py` | tool 2 ตัว + Pydantic models |
+| `src/thai_shop_agent/baseline.py` | B0 / B1 / B2 (single-shot) |
+| `src/thai_shop_agent/agent.py` | agent loop + events |
+| `src/thai_shop_agent/api.py`, `web/index.html` | FastAPI + หน้าเว็บ |
+| `eval/` | testset, validator, run / sweep / compare, ผลทั้งหมดใน `eval/results/` |
+
+## ติดตั้งและรัน
+
+ต้องมี Python 3.14 และ [uv](https://docs.astral.sh/uv/) และสิทธิ์เข้าถึง proxy ของวิชา (OpenAI-compatible)
+
+```bash
+uv sync
+```
+
+สร้างไฟล์ `.env` จาก `.env.example` แล้วใส่ค่า `OPENAI_API_KEY` และ `OPENAI_BASE_URL` (ห้าม commit `.env`)
+
+```bash
+cp .env.example .env
+```
+
+สร้างข้อมูล (seed 42 ได้ไฟล์เหมือนเดิมทุก byte) และฐานข้อมูล `data/shop.db`
+
+```bash
+uv run scripts/generate_data.py --seed 42
+```
+
+```bash
+uv run scripts/build_db.py
+```
+
+ตรวจ proxy (embedding 1024 มิติ และ native tool calls) แล้วสร้าง index ของ retrieval (`data/index.json` ไม่อยู่ใน git)
+
+```bash
+uv run --env-file .env scripts/check_proxy.py
+```
+
+```bash
+uv run --env-file .env scripts/build_index.py
+```
+
+เปิด API และหน้าเว็บที่ http://127.0.0.1:8000
+
+```bash
+uv run --env-file .env uvicorn thai_shop_agent.api:app --reload
+```
+
+- `POST /ask` body `{"question": "..."}` (1–500 ตัวอักษร) → `text/event-stream` 1 frame ต่อ event: `retrieval`, `tool_call`, `tool_result`, `answer` หรือ `error`
+- `GET /health`, `GET /` (หน้าเว็บ)
+
+ทดสอบ (ไม่เรียก proxy)
+
+```bash
+uv run pytest
+```
+
+## วิธีรัน eval
+
+```bash
+uv run eval/validate_testset.py
+```
+
+```bash
+uv run eval/validate_examples.py
+```
+
+```bash
+uv run --env-file .env eval/retrieval_eval.py
+```
+
+```bash
+uv run --env-file .env eval/run.py --config full
+```
+
+`--config` เป็น `b0`, `b1`, `b2` หรือ `full`; ค่า retrieval ใช้ `DEFAULT_RETRIEVAL` เว้นแต่ส่ง `--k-schema`, `--k-examples`, `--min-score`;
+`--ids q01 q12` รันเฉพาะบางข้อ
+
+```bash
+uv run --env-file .env eval/sweep.py
+```
+
+```bash
+uv run eval/compare.py
+```
+
+| config | context | การเรียก model |
+|---|---|---|
+| B0 | DDL ทั้งหมด + schema docs ทั้งหมด | 1 ครั้ง ไม่มี tool |
+| B1 | relationships + top-k ตาราง/กฎ + DDL ที่เกี่ยวข้อง | 1 ครั้ง ไม่มี tool |
+| B2 | B1 + top-k ตัวอย่าง (คำถาม → SQL) | 1 ครั้ง ไม่มี tool |
+| full | เริ่มจาก context แบบ B2 | agent loop ≤ 5 ครั้ง, tool `search_schema` / `run_sql` |
+
+ตัวชี้วัด (ล็อกก่อนเริ่มสร้างระบบ): **EX** (ผลตรง gold ไม่สนลำดับแถว เว้นแต่ order_matters, ยอมคอลัมน์เกิน), **EX-strict**
+(คอลัมน์ต้องตรงจำนวนและลำดับ), **valid SQL** (ผ่าน guard และรันได้), schema recall@k, latency, llm_calls, tokens
+ทุกค่าแยกตาม difficulty และ lang — testset 30 ข้อ (th 15 / en 15; easy 10 / medium 12 / hard 8)
+
+## ผลลัพธ์
+
+ตัวเลขทั้งหมดมาจากการรันจริง (`eval/results/comparison.md`, สร้างด้วย `eval/compare.py`) temperature 0;
+ค่า retrieval default k_schema=5, k_examples=1, min_score=0.35 (B1 ใช้ k_examples=0) เลือกจาก
+`eval/results/sweep_20261023-113639.json`; B1, B2, full รันอย่างละ 2 รอบและแสดงทั้งสองรอบ
+
+| run | EX | EX-strict | valid SQL | hard EX | th EX | en EX | latency s | llm_calls | prompt tok | completion tok |
+|---|---|---|---|---|---|---|---|---|---|---|
+| b0 #1 | 0.900 | 0.800 | 0.967 | 0.625 | 1.000 | 0.800 | 1.06 | 1.00 | 3862 | 80 |
+| b1 #1 | 0.800 | 0.733 | 1.000 | 0.750 | 0.867 | 0.733 | 1.24 | 1.00 | 1642 | 76 |
+| b1 #2 | 0.800 | 0.733 | 1.000 | 0.750 | 0.867 | 0.733 | 1.22 | 1.00 | 1642 | 75 |
+| b2 #1 | 0.800 | 0.733 | 0.967 | 0.625 | 0.867 | 0.733 | 1.12 | 1.00 | 1720 | 69 |
+| b2 #2 | 0.833 | 0.733 | 0.967 | 0.625 | 0.933 | 0.733 | 1.13 | 1.00 | 1720 | 70 |
+| full #1 | 0.867 | 0.733 | 1.000 | 0.625 | 0.933 | 0.800 | 2.47 | 2.17 | 4713 | 172 |
+| full #2 | 0.867 | 0.733 | 1.000 | 0.625 | 0.933 | 0.800 | 2.47 | 2.17 | 4713 | 172 |
+
+แยกตาม difficulty (EX / EX-strict / valid SQL, รอบ #1 ของแต่ละ config; รอบ #2 อยู่ใน `comparison.md`)
+
+| config | easy | medium | hard |
+|---|---|---|---|
+| b0 | 1.000 / 0.900 / 1.000 | 1.000 / 0.833 / 1.000 | 0.625 / 0.625 / 0.875 |
+| b1 | 1.000 / 1.000 / 1.000 | 0.667 / 0.500 / 1.000 | 0.750 / 0.750 / 1.000 |
+| b2 | 1.000 / 0.900 / 1.000 | 0.750 / 0.667 / 1.000 | 0.625 / 0.625 / 0.875 |
+| full | 1.000 / 0.900 / 1.000 | 0.917 / 0.750 / 1.000 | 0.625 / 0.500 / 1.000 |
+
+สรุป
+
+- B0 (schema ทั้งหมดใน prompt) ยังได้ EX สูงสุด 0.900; full ได้ 0.867 ทั้งสองรอบ
+- full ได้ valid SQL 1.000 (B0 0.967) เพราะ agent เห็น error แล้วแก้ SQL เองได้
+- B1 / B2 ใช้ prompt เล็กลงประมาณ 2.3 เท่า (1642–1720 vs 3862 tokens) โดย EX ลดลง 0.07–0.10; B1 ได้ hard EX 0.750 สูงกว่า B0
+- full ใช้ token มากกว่า B0 (~4700 prompt tokens รวมทุกรอบ, 2.17 LLM calls ต่อคำถาม) และช้ากว่า ~2.3 เท่า
+- schema recall@k (ไม่เรียก chat model, `retrieval_20261023-112336.json`): 0.956 ที่ k=3, 0.969 ที่ k=5, 1.000 ที่ k=7
+  เมื่อนับ DDL ของตารางที่กฎอ้างถึงด้วย (ถ้านับเฉพาะ chunk ตาราง: 0.742 / 0.843 / 0.952)
+- ข้อที่ full ผิด (q12, q25, q26, q28) วิเคราะห์ไว้ใน `eval/error_analysis.md`: จังหวัดกรุงเทพหลายชื่อ, ใช้ `name_th` กับคำถามอังกฤษ,
+  นิยามยอดขาย, ลำดับ AND/OR
+
+## ข้อจำกัด
+
+- **จูนบน testset:** มี testset ชุดเดียว 30 ข้อ (ไม่มี dev split) ค่า k / min_score เลือกจากผลบนชุดเดียวกับที่รายงาน
+  และส่วนต่างระหว่างค่าที่ดีที่สุดคือ 1–2 ข้อ ตัวเลขจึงมองโลกในแง่ดีกว่าความจริง และความแตกต่างระหว่าง config หลายคู่อยู่ในระดับ noise
+- **ผลไม่ deterministic:** แม้ temperature 0 proxy ให้ผลต่างกันระหว่างรอบ (B2 ค่าเดียวกันได้ 0.867 ใน sweep, 0.800 และ 0.833 ในสองรอบจริง)
+- **Agent ไม่ตรวจผลที่น่าสงสัย:** เมื่อผลเป็น 0 หรือว่าง agent มักตอบเลยแทนที่จะเรียก `search_schema` หากฎที่ขาด
+  และเงื่อนไขหยุด "ไม่เรียก tool = ตอบแล้ว" + "SQL ล่าสุดที่รันสำเร็จ = คำตอบ" อาจทำให้ query สำรวจข้อมูลกลายเป็นคำตอบ
+- **Rate limit ของ proxy:** 200k tokens/นาที ระบบรอแล้วลองใหม่ (เวลารอไม่นับใน latency ของ eval แต่ผู้ใช้หน้าเว็บต้องรอจริง)
+- **ภาษาของคำตอบ:** model บางครั้งตอบเป็นภาษาไทยกับคำถามอังกฤษ และใช้ชื่อหมวด `name_th` (นับเป็นผิดตามกติกา)
+- **ข้อมูลสังเคราะห์และ model เดียว:** ผลไม่ได้แทนข้อมูลจริงหรือ model อื่น; ตัวอย่าง few-shot 44 ข้อเขียนขึ้นเองและตรวจไม่ให้ซ้ำกับ testset
+  (`eval/validate_examples.py`) แต่ยังสอน pattern เดียวกับที่ testset ใช้
+- **ความปลอดภัย:** guard + connection read-only ป้องกันการเขียนและการอ่านตารางนอก 8 ตาราง แต่ไม่ได้จำกัดว่าผู้ใช้เห็นข้อมูลส่วนบุคคล
+  (อีเมล / เบอร์โทร) ได้แค่ไหน และไม่มี authentication ที่ API
